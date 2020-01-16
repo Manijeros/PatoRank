@@ -2,7 +2,11 @@ import R from 'ramda'
 import React, { useState } from 'react'
 import { View, Text } from 'react-native'
 import { PlayerData, updateRankingWithMatch, NewMatch } from './ranking'
-import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler'
+import {
+  ScrollView,
+  TouchableHighlight,
+  TouchableOpacity
+} from 'react-native-gesture-handler'
 import PlayerBox from './PlayerBox'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -69,6 +73,48 @@ function SelectPosition({
   )
 }
 
+interface MatchesMessageProps {
+  count: number
+  onQuit: () => any
+}
+
+const MatchesMessage = ({ count, onQuit }: MatchesMessageProps) => {
+  const message =
+    count === 1
+      ? 'No puedes jugar un solo pato!'
+      : `No puedes jugar solo ${count} patos!`
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 5
+      }}
+    >
+      <Text style={{ fontSize: 18, flex: 1 }}>{message}</Text>
+      <TouchableOpacity
+        onPress={onQuit}
+        style={{
+          backgroundColor: 'lightgreen',
+          margin: 10,
+          padding: 30,
+          width: 120,
+          flexDirection: 'column',
+          borderRadius: 5
+        }}
+      >
+        <Text
+          numberOfLines={2}
+          style={{ fontWeight: 'bold', textAlign: 'center' }}
+        >
+          EL PEOR FINAL
+        </Text>
+      </TouchableOpacity>
+    </View>
+  )
+}
+
 interface AddMatchProps {
   players: PlayerData[]
 }
@@ -80,6 +126,7 @@ function AddMatch({
   const [selectedPositions, setSelectedPositions] = useState(
     {} as { [index: string]: number }
   )
+  const [matchesCount, setMatchesCount] = useState<number>(0)
   const enableSend = checkData(players, selectedPositions)
   return (
     <View style={{ flex: 1 }}>
@@ -110,17 +157,26 @@ function AddMatch({
           ))}
         </View>
       </ScrollView>
-      <SafeAreaView style={{ alignContent: 'flex-end' }}>
+      <SafeAreaView style={{ alignContent: 'flex-end', margin: 10 }}>
+        {matchesCount > 0 && (
+          <MatchesMessage
+            count={matchesCount}
+            onQuit={() => {
+              navigation.navigate('Rankings')
+            }}
+          />
+        )}
         <TouchableHighlight
           underlayColor="#1133AA"
           style={{
             borderRadius: 5,
             backgroundColor: enableSend ? '#2266FF' : '#666666',
-            margin: 10,
             padding: 10
           }}
           onPress={
-            enableSend ? () => send(selectedPositions, navigation) : undefined
+            enableSend
+              ? () => send(selectedPositions, matchesCount, setMatchesCount)
+              : undefined
           }
         >
           <Text
@@ -158,7 +214,11 @@ function checkData(players: PlayerData[], selectedPositions: Selection) {
   }
   return true
 }
-function send(selectedPositions: Selection, navigation: any) {
+function send(
+  selectedPositions: Selection,
+  matchesCount: number,
+  setMatchesCount: (number) => any
+) {
   let match: NewMatch = {
     first: '',
     second: [],
@@ -183,7 +243,7 @@ function send(selectedPositions: Selection, navigation: any) {
     }
   })
   updateRankingWithMatch(match)
-  navigation.navigate('Rankings')
+  setMatchesCount(matchesCount + 1)
 }
 
 export default function AddMatchWrapped(props: { navigation: any }) {
