@@ -36,7 +36,8 @@
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@types/react-native-sortable-grid": "^2.0.2",
-    "babel-preset-expo": "~8.0.0"
+    "babel-preset-expo": "~8.0.0",
+    "babel-plugin-inline-dotenv": "^1.5.0"
   },
   "private": true
 }
