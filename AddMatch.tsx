@@ -16,58 +16,43 @@ interface Selection {
 
 interface SelectPositionProps {
   player: PlayerData
+  position: number
   maxPosition: number
   selectedPositions: Selection
   onTap: (item: PlayerData, position: number) => void
 }
 
-function SelectPosition({
-  player,
-  maxPosition,
-  selectedPositions,
-  onTap
-}: SelectPositionProps) {
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-evenly'
-      }}
-    >
-      <PlayerBox key={player.id} player={player} selected={false} />
-      <View
-        style={{
-          flexDirection: 'row',
-          borderRadius: 10,
-          backgroundColor: '#EECC22',
-          overflow: 'hidden'
-        }}
-      >
-        {R.unfold(
-          n => (n > 0 ? [maxPosition - n + 1, n - 1] : false),
-          maxPosition
-        ).map(n => {
-          return (
-            <TouchableHighlight
-              key={player.id + n}
-              onPress={() => onTap(player, n)}
-              style={{
-                padding: 20,
-                backgroundColor:
-                  selectedPositions[player.id] == n ? '#CC8800' : undefined
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 20
-                }}
-              >
-                {n}
-              </Text>
-            </TouchableHighlight>
-          )
-        })}
+function SelectPosition({ player, position, maxPosition, selectedPositions, onTap }: SelectPositionProps) {
+  return (<View
+    style={{
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-evenly',
+    }}>
+    <PlayerBox key={ player.id }
+      player={ player }
+      selected={ position } />
+    <View style={{
+      flexDirection: 'row',
+      borderRadius: 10,
+      backgroundColor: '#EECC22',
+      overflow: 'hidden',
+    }}>
+      {
+        R.unfold(n => n > 0 ? [maxPosition - n + 1, n - 1] : false, maxPosition).map( n => {
+          return (<TouchableHighlight
+            key={ player.id + n }
+            onPress={ ()=>onTap(player, n) }
+            style={{
+              padding: 20,
+              backgroundColor: selectedPositions[player.id] == n ? '#CC8800' : undefined,
+            }}>
+            <Text style={{
+              fontSize: 20,
+            }}>{ n }</Text>
+          </TouchableHighlight>)
+        })
+      }
       </View>
     </View>
   )
@@ -128,9 +113,30 @@ function AddMatch({
   )
   const [matchesCount, setMatchesCount] = useState<number>(0)
   const enableSend = checkData(players, selectedPositions)
-  return (
-    <View style={{ flex: 1 }}>
-      <ScrollView
+  return (<View style={{ flex: 1 }}>
+    <ScrollView
+      style={{
+        flex: 1,
+        margin: 0,
+      }}>
+      <View style={{
+        width: '100%',
+      }}>
+      {
+        players.map( (item, index) => (
+          <SelectPosition key={ item.id }
+            player={ item }
+            position={ index + 1 }
+            maxPosition={ players.length }
+            selectedPositions={ selectedPositions }
+            onTap={ (player, position) => setSelectedPositions({ ...selectedPositions, [player.id]: position }) } />
+        ))
+      }
+      </View>
+    </ScrollView>
+    <SafeAreaView style={{ alignContent: 'flex-end' }}>
+      <TouchableHighlight
+        underlayColor='#1133AA'
         style={{
           flex: 1,
           margin: 0
