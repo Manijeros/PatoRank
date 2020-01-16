@@ -12,12 +12,13 @@ interface Selection {
 
 interface SelectPositionProps {
   player: PlayerData
+  position: number
   maxPosition: number
   selectedPositions: Selection
   onTap: (item: PlayerData, position: number) => void
 }
 
-function SelectPosition({ player, maxPosition, selectedPositions, onTap }: SelectPositionProps) {
+function SelectPosition({ player, position, maxPosition, selectedPositions, onTap }: SelectPositionProps) {
   return (<View
     style={{
       flexDirection: 'row',
@@ -26,7 +27,7 @@ function SelectPosition({ player, maxPosition, selectedPositions, onTap }: Selec
     }}>
     <PlayerBox key={ player.id }
       player={ player }
-      selected={ false } />
+      selected={ position } />
     <View style={{
       flexDirection: 'row',
       borderRadius: 10,
@@ -69,9 +70,10 @@ function AddMatch({ players, navigation }: AddMatchProps & { navigation: any }) 
         width: '100%',
       }}>
       {
-        players.map( item => (
+        players.map( (item, index) => (
           <SelectPosition key={ item.id }
             player={ item }
+            position={ index + 1 }
             maxPosition={ players.length }
             selectedPositions={ selectedPositions }
             onTap={ (player, position) => setSelectedPositions({ ...selectedPositions, [player.id]: position }) } />

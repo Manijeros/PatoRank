@@ -29,7 +29,8 @@ const SelectPlayers: React.FC<SelectPlayersProps> = ({ players, selectedIds, onT
         <PlayerBox key={ item.id }
           player={ item }
           onTap={ () => onTap(item) }
-          selected={ selectedIds.indexOf(item.id) >= 0 } />
+          selected={ selectedIds.indexOf(item.id) + 1 }
+          selectedCount={ selectedIds.length } />
       ))
     }
     </View>
@@ -49,7 +50,7 @@ function SelectPlayersAndContinue({ navigation, ...props }: SelectPlayersProps &
           margin: 10,
           padding: 10,
         }}
-        onPress={ () => navigation.push('AddMatch', { players: R.filter(p => selectedIds.indexOf(p.id) >= 0, players) }) }>
+        onPress={ () => navigation.push('AddMatch', { players: selectedIds.map(id => players.find(p => p.id === id)) }) }>
         <Text style={{
           color: 'white',
           textAlign: 'center',
