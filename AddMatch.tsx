@@ -3,7 +3,12 @@ import React, { useState } from 'react'
 import { View, Text } from 'react-native'
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { PlayerData, updateRankingWithMatch, NewMatch } from './ranking'
+import {
+  PlayerData,
+  updateRankingWithMatch,
+  NewMatch,
+  addMatch
+} from './ranking'
 import PlayerBox from './PlayerBox'
 
 interface Selection {
@@ -254,6 +259,7 @@ function send(
     }
   })
   updateRankingWithMatch(match)
+  addMatch(match)
   setSelectedPositions({})
   setMatchesCount(matchesCount + 1)
 }

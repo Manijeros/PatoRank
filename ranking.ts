@@ -1,7 +1,7 @@
+const _ = require('ramda')
 import glicko from 'glicko2'
 
 import db from './db'
-const _ = require('ramda')
 
 export type PlayerData = {
   id: string
@@ -40,6 +40,16 @@ export interface NewMatch {
   second: string[]
   third: string[]
   fourth: string[]
+}
+
+export async function addMatch(match: NewMatch) {
+  return db.insertMatch({
+    date: new Date(),
+    first: [match.first],
+    second: match.second,
+    third: match.third,
+    fourth: match.fourth
+  })
 }
 
 export async function updateRankingWithMatch(match: NewMatch) {

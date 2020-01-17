@@ -6,6 +6,7 @@ declare module 'airtable' {
 
   class Base<RecordType> {
     select: () => BaseSelection<RecordType>
+    create(record: RecordType, opts?: { typecast: boolean }): Promise<Record<RecordType>>
     update: (
       updates: Array<{ id: string; fields: Partial<RecordType> }>,
       callback: UpdateCallback
