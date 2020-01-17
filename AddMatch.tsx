@@ -1,14 +1,10 @@
 import R from 'ramda'
 import React, { useState } from 'react'
 import { View, Text } from 'react-native'
-import { PlayerData, updateRankingWithMatch, NewMatch } from './ranking'
-import {
-  ScrollView,
-  TouchableHighlight,
-  TouchableOpacity
-} from 'react-native-gesture-handler'
-import PlayerBox from './PlayerBox'
+import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { PlayerData, updateRankingWithMatch, NewMatch } from './ranking'
+import PlayerBox from './PlayerBox'
 
 interface Selection {
   [index: string]: number
@@ -57,7 +53,7 @@ function SelectPosition({
               style={{
                 padding: 20,
                 backgroundColor:
-                  selectedPositions[player.id] == n ? '#CC8800' : undefined
+                  selectedPositions[player.id] === n ? '#CC8800' : undefined
               }}
             >
               <Text
@@ -209,7 +205,7 @@ function AddMatch({
 }
 
 function checkData(players: PlayerData[], selectedPositions: Selection) {
-  if (R.keys(selectedPositions).length != players.length) {
+  if (R.keys(selectedPositions).length !== players.length) {
     return false
   }
   let used = R.repeat(0, players.length)
@@ -217,11 +213,12 @@ function checkData(players: PlayerData[], selectedPositions: Selection) {
     key => (used[selectedPositions[key] - 1] += 1),
     selectedPositions
   )
-  if (used[0] != 1) {
+  if (used[0] !== 1) {
     return false
   }
   if (
-    R.reduce((r, n) => (n > 0 && r == 0 ? -1 : n == 0 ? 0 : r), 1, used) == -1
+    R.reduce((r, n) => (n > 0 && r === 0 ? -1 : n === 0 ? 0 : r), 1, used) ===
+    -1
   ) {
     return false
   }

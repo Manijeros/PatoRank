@@ -1,7 +1,7 @@
 import React from 'react'
-import { PlayerData } from './ranking'
 import { TouchableHighlight } from 'react-native-gesture-handler'
 import { Image, Text, View } from 'react-native'
+import { PlayerData } from './ranking'
 
 interface PlayerViewProps {
   player: PlayerData

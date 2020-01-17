@@ -24,7 +24,7 @@ function Home({
           onPressItem={name => {
             switch (name) {
               case 'bt_match':
-                navigation.push('SelectPlayers', { players: players })
+                navigation.push('SelectPlayers', { players })
                 break
             }
           }}

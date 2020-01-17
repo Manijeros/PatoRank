@@ -21,7 +21,7 @@ function setup(baseId: string, secret: string) {
 function parseAttachment(
   picture: { url: string }[] | undefined
 ): string | undefined {
-  if (picture == null || picture.length == 0) {
+  if (picture == null || picture.length === 0) {
     return undefined
   }
   return picture[0].url

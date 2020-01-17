@@ -1,9 +1,9 @@
 import R from 'ramda'
 import React, { useState } from 'react'
-import { PlayerData } from './ranking'
 import { Text, View } from 'react-native'
 import { TouchableHighlight, ScrollView } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { PlayerData } from './ranking'
 import PlayerBox from './PlayerBox'
 
 interface SelectPlayersProps {
