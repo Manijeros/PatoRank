@@ -51,22 +51,29 @@ function SelectPlayersAndContinue({
   ...props
 }: SelectPlayersProps & { navigation: any }) {
   const { players, selectedIds } = props
+  const enableContinue = selectedIds.length > 1
   return (
     <View style={{ flex: 1 }}>
       <SelectPlayers {...props} />
-      <SafeAreaView>
+      <SafeAreaView style={{ paddingTop: 0 }}>
         <TouchableHighlight
           underlayColor="#1133AA"
           style={{
             borderRadius: 5,
-            backgroundColor: '#2266FF',
+            backgroundColor: enableContinue ? '#2266FF' : '#666666',
             margin: 10,
+            marginTop: 0,
             padding: 10
           }}
-          onPress={() =>
-            navigation.push('AddMatch', {
-              players: selectedIds.map(id => players.find(p => p.id === id))
-            })
+          onPress={
+            enableContinue
+              ? () =>
+                  navigation.push('AddMatch', {
+                    players: selectedIds.map(id =>
+                      players.find(p => p.id === id)
+                    )
+                  })
+              : undefined
           }
         >
           <Text
