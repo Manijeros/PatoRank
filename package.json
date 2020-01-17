@@ -5,7 +5,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "format": "prettier"
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.1",
@@ -36,8 +37,9 @@
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@types/react-native-sortable-grid": "^2.0.2",
+    "babel-plugin-inline-dotenv": "^1.5.0",
     "babel-preset-expo": "~8.0.0",
-    "babel-plugin-inline-dotenv": "^1.5.0"
+    "prettier": "^1.19.1"
   },
   "private": true
 }
