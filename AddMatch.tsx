@@ -77,10 +77,11 @@ function SelectPosition({
 
 interface MatchesMessageProps {
   count: number
+  enabled: boolean
   onQuit: () => any
 }
 
-const MatchesMessage = ({ count, onQuit }: MatchesMessageProps) => {
+const MatchesMessage = ({ count, enabled, onQuit }: MatchesMessageProps) => {
   const message =
     count === 1
       ? 'No puedes jugar un solo pato!'
@@ -90,17 +91,17 @@ const MatchesMessage = ({ count, onQuit }: MatchesMessageProps) => {
       style={{
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: 10,
-        paddingHorizontal: 5
+        margin: 10,
+        marginTop: 0
       }}
     >
       <Text style={{ fontSize: 18, flex: 1 }}>{message}</Text>
-      <TouchableOpacity
-        onPress={onQuit}
+      <TouchableHighlight
+        onPress={enabled ? onQuit : undefined}
+        underlayColor="#116600"
         style={{
-          backgroundColor: 'lightgreen',
-          margin: 10,
-          padding: 30,
+          backgroundColor: enabled ? '#22AA00' : '#666666',
+          padding: 20,
           width: 120,
           flexDirection: 'column',
           borderRadius: 5
@@ -108,11 +109,11 @@ const MatchesMessage = ({ count, onQuit }: MatchesMessageProps) => {
       >
         <Text
           numberOfLines={2}
-          style={{ fontWeight: 'bold', textAlign: 'center' }}
+          style={{ fontWeight: 'bold', textAlign: 'center', color: 'white' }}
         >
           EL PEOR FINAL
         </Text>
-      </TouchableOpacity>
+      </TouchableHighlight>
     </View>
   )
 }
@@ -160,10 +161,11 @@ function AddMatch({
           ))}
         </View>
       </ScrollView>
-      <SafeAreaView style={{ alignContent: 'flex-end', margin: 10 }}>
+      <SafeAreaView style={{ paddingTop: 0 }}>
         {matchesCount > 0 && (
           <MatchesMessage
             count={matchesCount}
+            enabled={!enableSend}
             onQuit={() => {
               navigation.navigate('Rankings')
             }}
@@ -174,11 +176,19 @@ function AddMatch({
           style={{
             borderRadius: 5,
             backgroundColor: enableSend ? '#2266FF' : '#666666',
+            margin: 10,
+            marginTop: 0,
             padding: 10
           }}
           onPress={
             enableSend
-              ? () => send(selectedPositions, matchesCount, setMatchesCount)
+              ? () =>
+                  send(
+                    selectedPositions,
+                    setSelectedPositions,
+                    matchesCount,
+                    setMatchesCount
+                  )
               : undefined
           }
         >
@@ -219,8 +229,9 @@ function checkData(players: PlayerData[], selectedPositions: Selection) {
 }
 function send(
   selectedPositions: Selection,
+  setSelectedPositions: (sel: Selection) => void,
   matchesCount: number,
-  setMatchesCount: (number) => any
+  setMatchesCount: (count: number) => void
 ) {
   let match: NewMatch = {
     first: '',
@@ -246,6 +257,7 @@ function send(
     }
   })
   updateRankingWithMatch(match)
+  setSelectedPositions({})
   setMatchesCount(matchesCount + 1)
 }
 
