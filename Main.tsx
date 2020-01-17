@@ -29,7 +29,7 @@ const RootNavigator = createSwitchNavigator(
 const Main = createAppContainer(RootNavigator)
 
 if (isConfigured) {
-  db.setup(process.env.BASE_ID, process.env.BASE_APIKEY)
+  db.setup(process.env.BASE_ID!, process.env.BASE_APIKEY!)
 }
 
 export default Main
