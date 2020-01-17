@@ -1,7 +1,7 @@
-const _ = require('ramda')
 import glicko from 'glicko2'
 
 import db from './db'
+const _ = require('ramda')
 
 export type PlayerData = {
   id: string

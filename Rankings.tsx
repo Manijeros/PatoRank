@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
-import { getPlayers, PlayerData } from './ranking'
-import { Text, View, Image, StyleSheet } from 'react-native'
 import React from 'react'
+import { Text, View, Image, StyleSheet } from 'react-native'
+
 import { FlatList } from 'react-native-gesture-handler'
-import PlayersAware, { PlayersAwareComponentProps } from './PlayersAware'
+import { PlayerData } from './ranking'
+import { PlayersAwareComponentProps } from './PlayersAware'
 
 interface ItemProps {
   player: PlayerData
