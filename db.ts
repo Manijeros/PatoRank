@@ -9,6 +9,14 @@ type PlayerType = {
   hat: string | undefined
 }
 
+type MatchType = {
+  date?: Date
+  first: string[]
+  second: string[]
+  third?: string[]
+  fourth?: string[]
+}
+
 let base: Airtable.BaseGetterFunction
 
 function setup(baseId: string, secret: string) {
@@ -72,4 +80,8 @@ async function updatePlayers(
   })
 }
 
-export default { setup, getPlayers, updatePlayers }
+async function insertMatch(match: MatchType) {
+  return base<MatchType>('Matches').create(match)
+}
+
+export default { setup, getPlayers, updatePlayers, insertMatch }

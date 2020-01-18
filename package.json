@@ -6,7 +6,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "lint": "eslint . --ext=tsx,ts,js"
+    "lint": "eslint . --ext=tsx,ts,js",
+    "tsc": "tsc"
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.1",
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
+    "@types/node": "^13.1.8",
     "@types/react-native-sortable-grid": "^2.0.2",
     "@typescript-eslint/eslint-plugin": "^2.16.0",
     "@typescript-eslint/parser": "^2.16.0",
