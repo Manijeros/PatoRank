@@ -1,6 +1,6 @@
 import R from 'ramda'
 import React, { useState } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, ActivityIndicator, Alert } from 'react-native'
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import {
@@ -47,14 +47,12 @@ function SelectPosition({
           overflow: 'hidden'
         }}
       >
-        {R.unfold(
-          n => (n > 0 ? [maxPosition - n + 1, n - 1] : false),
-          maxPosition
-        ).map(n => {
+        {R.range(1, maxPosition + 1).map(n => {
           return (
             <TouchableHighlight
               key={player.id + n}
               onPress={() => onTap(player, n)}
+              underlayColor="#AA5500"
               style={{
                 padding: 20,
                 backgroundColor:
@@ -131,6 +129,7 @@ function AddMatch({
     {} as { [index: string]: number }
   )
   const [matchesCount, setMatchesCount] = useState<number>(0)
+  const [saving, setSaving] = useState(false)
   const enableSend = checkData(players, selectedPositions)
   return (
     <View style={{ flex: 1 }}>
@@ -166,7 +165,7 @@ function AddMatch({
         {matchesCount > 0 && (
           <MatchesMessage
             count={matchesCount}
-            enabled={!enableSend}
+            enabled={!enableSend && !saving}
             onQuit={() => {
               navigation.navigate('Rankings')
             }}
@@ -188,21 +187,27 @@ function AddMatch({
                     selectedPositions,
                     setSelectedPositions,
                     matchesCount,
-                    setMatchesCount
+                    setMatchesCount,
+                    setSaving
                   )
               : undefined
           }
         >
-          <Text
-            style={{
-              color: 'white',
-              textAlign: 'center',
-              fontWeight: 'bold',
-              fontSize: 20
-            }}
-          >
-            Agregar
-          </Text>
+          <View style={{ height: 30, justifyContent: 'space-around' }}>
+            {!saving && (
+              <Text
+                style={{
+                  color: 'white',
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                  fontSize: 20
+                }}
+              >
+                Agregar
+              </Text>
+            )}
+            {saving && <ActivityIndicator color="white" />}
+          </View>
         </TouchableHighlight>
       </SafeAreaView>
     </View>
@@ -229,11 +234,12 @@ function checkData(players: PlayerData[], selectedPositions: Selection) {
   }
   return true
 }
-function send(
+async function send(
   selectedPositions: Selection,
   setSelectedPositions: (sel: Selection) => void,
   matchesCount: number,
-  setMatchesCount: (count: number) => void
+  setMatchesCount: (count: number) => void,
+  setSaving: (saving: boolean) => void
 ) {
   let match: NewMatch = {
     first: '',
@@ -258,10 +264,16 @@ function send(
         break
     }
   })
-  updateRankingWithMatch(match)
-  addMatch(match)
-  setSelectedPositions({})
-  setMatchesCount(matchesCount + 1)
+  setSaving(true)
+  try {
+    await addMatch(match)
+    await updateRankingWithMatch(match)
+    setSelectedPositions({})
+    setMatchesCount(matchesCount + 1)
+  } catch (e) {
+    Alert.alert('Error guardando partida', String(e))
+  }
+  setSaving(false)
 }
 
 export default function AddMatchWrapped(props: { navigation: any }) {
