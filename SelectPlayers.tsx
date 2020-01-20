@@ -1,10 +1,11 @@
 import R from 'ramda'
 import React, { useState } from 'react'
 import { Text, View } from 'react-native'
-import { TouchableHighlight, ScrollView } from 'react-native-gesture-handler'
+import { ScrollView } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { PlayerData } from './ranking'
 import PlayerBox from './PlayerBox'
+import RoundedButton from './RoundedButton'
 
 interface SelectPlayersProps {
   players: PlayerData[]
@@ -56,24 +57,16 @@ function SelectPlayersAndContinue({
     <View style={{ flex: 1 }}>
       <SelectPlayers {...props} />
       <SafeAreaView style={{ paddingTop: 0 }}>
-        <TouchableHighlight
+        <RoundedButton
           underlayColor="#1133AA"
+          enabled={enableContinue}
           style={{
-            borderRadius: 5,
-            backgroundColor: enableContinue ? '#2266FF' : '#666666',
-            margin: 10,
-            marginTop: 0,
-            padding: 10
+            backgroundColor: '#2266FF'
           }}
-          onPress={
-            enableContinue
-              ? () =>
-                  navigation.push('AddMatch', {
-                    players: selectedIds.map(id =>
-                      players.find(p => p.id === id)
-                    )
-                  })
-              : undefined
+          onPress={() =>
+            navigation.push('AddMatch', {
+              players: selectedIds.map(id => players.find(p => p.id === id))
+            })
           }
         >
           <Text
@@ -86,7 +79,7 @@ function SelectPlayersAndContinue({
           >
             Continuar
           </Text>
-        </TouchableHighlight>
+        </RoundedButton>
       </SafeAreaView>
     </View>
   )

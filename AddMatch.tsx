@@ -10,6 +10,7 @@ import {
   addMatch
 } from './ranking'
 import PlayerBox from './PlayerBox'
+import RoundedButton from './RoundedButton'
 
 interface Selection {
   [index: string]: number
@@ -20,6 +21,7 @@ interface SelectPositionProps {
   position: number
   maxPosition: number
   selectedPositions: Selection
+  enabled: boolean
   onTap: (item: PlayerData, position: number) => void
 }
 
@@ -28,6 +30,7 @@ function SelectPosition({
   position,
   maxPosition,
   selectedPositions,
+  enabled,
   onTap
 }: SelectPositionProps) {
   return (
@@ -51,7 +54,7 @@ function SelectPosition({
           return (
             <TouchableHighlight
               key={player.id + n}
-              onPress={() => onTap(player, n)}
+              onPress={enabled ? () => onTap(player, n) : undefined}
               underlayColor="#AA5500"
               style={{
                 padding: 20,
@@ -95,15 +98,14 @@ const MatchesMessage = ({ count, enabled, onQuit }: MatchesMessageProps) => {
       }}
     >
       <Text style={{ fontSize: 18, flex: 1 }}>{message}</Text>
-      <TouchableHighlight
-        onPress={enabled ? onQuit : undefined}
+      <RoundedButton
+        onPress={onQuit}
+        enabled={enabled}
         underlayColor="#116600"
         style={{
-          backgroundColor: enabled ? '#22AA00' : '#666666',
+          backgroundColor: '#22AA00',
           padding: 20,
-          width: 120,
-          flexDirection: 'column',
-          borderRadius: 5
+          width: 120
         }}
       >
         <Text
@@ -112,7 +114,7 @@ const MatchesMessage = ({ count, enabled, onQuit }: MatchesMessageProps) => {
         >
           EL PEOR FINAL
         </Text>
-      </TouchableHighlight>
+      </RoundedButton>
     </View>
   )
 }
@@ -151,6 +153,7 @@ function AddMatch({
               position={index + 1}
               maxPosition={players.length}
               selectedPositions={selectedPositions}
+              enabled={!saving}
               onTap={(player, position) =>
                 setSelectedPositions({
                   ...selectedPositions,
@@ -171,26 +174,20 @@ function AddMatch({
             }}
           />
         )}
-        <TouchableHighlight
+        <RoundedButton
           underlayColor="#1133AA"
           style={{
-            borderRadius: 5,
-            backgroundColor: enableSend ? '#2266FF' : '#666666',
-            margin: 10,
-            marginTop: 0,
-            padding: 10
+            backgroundColor: '#2266FF'
           }}
-          onPress={
-            enableSend
-              ? () =>
-                  send(
-                    selectedPositions,
-                    setSelectedPositions,
-                    matchesCount,
-                    setMatchesCount,
-                    setSaving
-                  )
-              : undefined
+          enabled={enableSend}
+          useSaving={[saving, setSaving]}
+          onPress={() =>
+            send(selectedPositions)
+              .then(() => {
+                setMatchesCount(matchesCount + 1)
+                setSelectedPositions({})
+              })
+              .catch(e => Alert.alert('Error guardando partida', String(e)))
           }
         >
           <View style={{ height: 30, justifyContent: 'space-around' }}>
@@ -208,7 +205,7 @@ function AddMatch({
             )}
             {saving && <ActivityIndicator color="white" />}
           </View>
-        </TouchableHighlight>
+        </RoundedButton>
       </SafeAreaView>
     </View>
   )
@@ -234,13 +231,7 @@ function checkData(players: PlayerData[], selectedPositions: Selection) {
   }
   return true
 }
-async function send(
-  selectedPositions: Selection,
-  setSelectedPositions: (sel: Selection) => void,
-  matchesCount: number,
-  setMatchesCount: (count: number) => void,
-  setSaving: (saving: boolean) => void
-) {
+async function send(selectedPositions: Selection) {
   let match: NewMatch = {
     first: '',
     second: [],
@@ -264,16 +255,8 @@ async function send(
         break
     }
   })
-  setSaving(true)
-  try {
-    await addMatch(match)
-    await updateRankingWithMatch(match)
-    setSelectedPositions({})
-    setMatchesCount(matchesCount + 1)
-  } catch (e) {
-    Alert.alert('Error guardando partida', String(e))
-  }
-  setSaving(false)
+  await addMatch(match)
+  await updateRankingWithMatch(match)
 }
 
 export default function AddMatchWrapped(props: { navigation: any }) {
