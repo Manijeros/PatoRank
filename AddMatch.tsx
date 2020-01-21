@@ -1,6 +1,6 @@
 import R from 'ramda'
 import React, { useState } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, ActivityIndicator, Alert } from 'react-native'
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import {
@@ -10,6 +10,7 @@ import {
   addMatch
 } from './ranking'
 import PlayerBox from './PlayerBox'
+import RoundedButton from './RoundedButton'
 
 interface Selection {
   [index: string]: number
@@ -20,6 +21,7 @@ interface SelectPositionProps {
   position: number
   maxPosition: number
   selectedPositions: Selection
+  enabled: boolean
   onTap: (item: PlayerData, position: number) => void
 }
 
@@ -28,6 +30,7 @@ function SelectPosition({
   position,
   maxPosition,
   selectedPositions,
+  enabled,
   onTap
 }: SelectPositionProps) {
   return (
@@ -47,14 +50,12 @@ function SelectPosition({
           overflow: 'hidden'
         }}
       >
-        {R.unfold(
-          n => (n > 0 ? [maxPosition - n + 1, n - 1] : false),
-          maxPosition
-        ).map(n => {
+        {R.range(1, maxPosition + 1).map(n => {
           return (
             <TouchableHighlight
               key={player.id + n}
-              onPress={() => onTap(player, n)}
+              onPress={enabled ? () => onTap(player, n) : undefined}
+              underlayColor="#AA5500"
               style={{
                 padding: 20,
                 backgroundColor:
@@ -97,15 +98,14 @@ const MatchesMessage = ({ count, enabled, onQuit }: MatchesMessageProps) => {
       }}
     >
       <Text style={{ fontSize: 18, flex: 1 }}>{message}</Text>
-      <TouchableHighlight
-        onPress={enabled ? onQuit : undefined}
+      <RoundedButton
+        onPress={onQuit}
+        enabled={enabled}
         underlayColor="#116600"
         style={{
-          backgroundColor: enabled ? '#22AA00' : '#666666',
+          backgroundColor: '#22AA00',
           padding: 20,
-          width: 120,
-          flexDirection: 'column',
-          borderRadius: 5
+          width: 120
         }}
       >
         <Text
@@ -114,7 +114,7 @@ const MatchesMessage = ({ count, enabled, onQuit }: MatchesMessageProps) => {
         >
           EL PEOR FINAL
         </Text>
-      </TouchableHighlight>
+      </RoundedButton>
     </View>
   )
 }
@@ -131,6 +131,7 @@ function AddMatch({
     {} as { [index: string]: number }
   )
   const [matchesCount, setMatchesCount] = useState<number>(0)
+  const [saving, setSaving] = useState(false)
   const enableSend = checkData(players, selectedPositions)
   return (
     <View style={{ flex: 1 }}>
@@ -152,6 +153,7 @@ function AddMatch({
               position={index + 1}
               maxPosition={players.length}
               selectedPositions={selectedPositions}
+              enabled={!saving}
               onTap={(player, position) =>
                 setSelectedPositions({
                   ...selectedPositions,
@@ -166,44 +168,44 @@ function AddMatch({
         {matchesCount > 0 && (
           <MatchesMessage
             count={matchesCount}
-            enabled={!enableSend}
+            enabled={!enableSend && !saving}
             onQuit={() => {
               navigation.navigate('Rankings')
             }}
           />
         )}
-        <TouchableHighlight
+        <RoundedButton
           underlayColor="#1133AA"
           style={{
-            borderRadius: 5,
-            backgroundColor: enableSend ? '#2266FF' : '#666666',
-            margin: 10,
-            marginTop: 0,
-            padding: 10
+            backgroundColor: '#2266FF'
           }}
-          onPress={
-            enableSend
-              ? () =>
-                  send(
-                    selectedPositions,
-                    setSelectedPositions,
-                    matchesCount,
-                    setMatchesCount
-                  )
-              : undefined
+          enabled={enableSend}
+          useSaving={[saving, setSaving]}
+          onPress={() =>
+            send(selectedPositions)
+              .then(() => {
+                setMatchesCount(matchesCount + 1)
+                setSelectedPositions({})
+              })
+              .catch(e => Alert.alert('Error guardando partida', String(e)))
           }
         >
-          <Text
-            style={{
-              color: 'white',
-              textAlign: 'center',
-              fontWeight: 'bold',
-              fontSize: 20
-            }}
-          >
-            Agregar
-          </Text>
-        </TouchableHighlight>
+          <View style={{ height: 30, justifyContent: 'space-around' }}>
+            {!saving && (
+              <Text
+                style={{
+                  color: 'white',
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                  fontSize: 20
+                }}
+              >
+                Agregar
+              </Text>
+            )}
+            {saving && <ActivityIndicator color="white" />}
+          </View>
+        </RoundedButton>
       </SafeAreaView>
     </View>
   )
@@ -229,12 +231,7 @@ function checkData(players: PlayerData[], selectedPositions: Selection) {
   }
   return true
 }
-function send(
-  selectedPositions: Selection,
-  setSelectedPositions: (sel: Selection) => void,
-  matchesCount: number,
-  setMatchesCount: (count: number) => void
-) {
+async function send(selectedPositions: Selection) {
   let match: NewMatch = {
     first: '',
     second: [],
@@ -258,10 +255,8 @@ function send(
         break
     }
   })
-  updateRankingWithMatch(match)
-  addMatch(match)
-  setSelectedPositions({})
-  setMatchesCount(matchesCount + 1)
+  await addMatch(match)
+  await updateRankingWithMatch(match)
 }
 
 export default function AddMatchWrapped(props: { navigation: any }) {
