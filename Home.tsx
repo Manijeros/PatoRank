@@ -3,6 +3,8 @@ import { StyleSheet, View } from 'react-native'
 import { FloatingAction } from 'react-native-floating-action'
 import Rankings from './Rankings'
 import PlayersAware, { PlayersAwareComponentProps } from './PlayersAware'
+import { NavigationEvents } from 'react-navigation'
+import { NavigationStackScreenProps } from 'react-navigation-stack'
 
 const actions = [
   {
@@ -13,11 +15,13 @@ const actions = [
 
 function Home({
   players,
+  setShouldUpdate,
   navigation
-}: PlayersAwareComponentProps & { navigation: any }) {
+}: PlayersAwareComponentProps & NavigationStackScreenProps) {
   return (
     <View style={styles.container}>
-      <Rankings players={players} />
+      <NavigationEvents onWillFocus={() => setShouldUpdate!(true)} />
+      <Rankings players={players} setShouldUpdate={setShouldUpdate} />
       {players && (
         <FloatingAction
           actions={actions}

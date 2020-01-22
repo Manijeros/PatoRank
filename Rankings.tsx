@@ -1,5 +1,5 @@
-import React from 'react'
-import { Text, View, Image, StyleSheet } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { Text, View, Image, StyleSheet, RefreshControl } from 'react-native'
 
 import { FlatList } from 'react-native-gesture-handler'
 import { PlayerData } from './ranking'
@@ -59,7 +59,14 @@ const Item: React.FC<ItemProps> = ({ player, index }) => {
   )
 }
 
-export default function Rankings({ players }: PlayersAwareComponentProps) {
+export default function Rankings({
+  players,
+  setShouldUpdate
+}: PlayersAwareComponentProps) {
+  const [refreshing, setRefreshing] = useState(false)
+  useEffect(() => {
+    setRefreshing(false)
+  }, [players])
   if (!players) {
     return (
       <View>
@@ -74,11 +81,20 @@ export default function Rankings({ players }: PlayersAwareComponentProps) {
         flex: 1
       }}
       contentInset={{ top: 0, bottom: 85 }}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={() => {
+            setRefreshing(true)
+            setShouldUpdate!(true)
+          }}
+        />
+      }
       data={players}
       renderItem={({ item, index }) => (
         <Item player={item} index={index + 1} key={item.id} />
       )}
-      keyExtractor={player => player.name}
+      keyExtractor={player => player.id}
       ListHeaderComponent={
         <Image
           style={{ height: 150, width: '100%', resizeMode: 'cover' }}
