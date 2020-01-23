@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { PlayerData } from './ranking'
 import PlayerBox from './PlayerBox'
 import RoundedButton from './RoundedButton'
+import { NavigationStackScreenProps } from 'react-navigation-stack'
 
 interface SelectPlayersProps {
   players: PlayerData[]
@@ -50,7 +51,7 @@ const SelectPlayers: React.FC<SelectPlayersProps> = ({
 function SelectPlayersAndContinue({
   navigation,
   ...props
-}: SelectPlayersProps & { navigation: any }) {
+}: SelectPlayersProps & NavigationStackScreenProps) {
   const { players, selectedIds } = props
   const enableContinue = selectedIds.length > 1
   return (
@@ -99,11 +100,11 @@ function toggle(
   )
 }
 
-export default function SelectPlayersScreen(props: any) {
+export default function SelectPlayersScreen(props: NavigationStackScreenProps) {
   const [selected, setSelected] = useState([] as string[])
   return (
     <SelectPlayersAndContinue
-      navigation={props.navigation}
+      {...props}
       players={props.navigation.getParam('players')}
       selectedIds={selected}
       onTap={item => toggle(item.id, selected, setSelected)}

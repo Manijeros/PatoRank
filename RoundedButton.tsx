@@ -3,7 +3,7 @@ import React, { PropsWithChildren } from 'react'
 
 type RoundedButtonProps = PropsWithChildren<{
   enabled?: boolean
-  onPress?: () => Promise<any> | void
+  onPress?: () => any
   style: StyleProp<ViewStyle>
   underlayColor?: string
   useSaving?: [boolean, (value: boolean) => void]

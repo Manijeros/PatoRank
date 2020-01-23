@@ -11,6 +11,7 @@ import {
 } from './ranking'
 import PlayerBox from './PlayerBox'
 import RoundedButton from './RoundedButton'
+import { NavigationStackScreenProps } from 'react-navigation-stack'
 
 interface Selection {
   [index: string]: number
@@ -126,7 +127,7 @@ interface AddMatchProps {
 function AddMatch({
   players,
   navigation
-}: AddMatchProps & { navigation: any }) {
+}: AddMatchProps & NavigationStackScreenProps) {
   const [selectedPositions, setSelectedPositions] = useState(
     {} as { [index: string]: number }
   )
@@ -259,7 +260,7 @@ async function send(selectedPositions: Selection) {
   await updateRankingWithMatch(match)
 }
 
-export default function AddMatchWrapped(props: { navigation: any }) {
+export default function AddMatchWrapped(props: NavigationStackScreenProps) {
   const players = props.navigation.getParam('players')
-  return <AddMatch players={players} navigation={props.navigation} />
+  return <AddMatch {...props} players={players} />
 }
