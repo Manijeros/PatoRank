@@ -8,11 +8,21 @@ import NotReady from './screens/NotReady'
 
 import db from './db'
 
-const MainNavigator = createStackNavigator({
-  Rankings: { screen: Home },
-  SelectPlayers,
-  AddMatch
-})
+const MainNavigator = createStackNavigator(
+  {
+    Rankings: { screen: Home },
+    SelectPlayers,
+    AddMatch
+  },
+  {
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: '#121212'
+      },
+      headerTintColor: '#14B795'
+    }
+  }
+)
 
 const isConfigured = process.env.CONFIGURED !== undefined
 

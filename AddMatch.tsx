@@ -47,11 +47,12 @@ function SelectPosition({
         style={{
           flexDirection: 'row',
           borderRadius: 10,
-          backgroundColor: '#EECC22',
+          backgroundColor: '#0A1E1F',
           overflow: 'hidden'
         }}
       >
         {R.range(1, maxPosition + 1).map(n => {
+          const selected = selectedPositions[player.id] === n
           return (
             <TouchableHighlight
               key={player.id + n}
@@ -59,13 +60,13 @@ function SelectPosition({
               underlayColor="#AA5500"
               style={{
                 padding: 20,
-                backgroundColor:
-                  selectedPositions[player.id] === n ? '#CC8800' : undefined
+                backgroundColor: selected ? '#14B795' : undefined
               }}
             >
               <Text
                 style={{
-                  fontSize: 20
+                  fontSize: 20,
+                  color: selected ? 'white' : '#ffffff80'
                 }}
               >
                 {n}
@@ -94,24 +95,36 @@ const MatchesMessage = ({ count, enabled, onQuit }: MatchesMessageProps) => {
       style={{
         flexDirection: 'row',
         alignItems: 'center',
-        margin: 10,
         marginTop: 0
       }}
     >
-      <Text style={{ fontSize: 18, flex: 1 }}>{message}</Text>
+      <Text
+        style={{
+          fontSize: 18,
+          flex: 1,
+          color: 'white',
+          margin: 10
+        }}
+      >
+        {message}
+      </Text>
       <RoundedButton
         onPress={onQuit}
         enabled={enabled}
         underlayColor="#116600"
         style={{
-          backgroundColor: '#22AA00',
+          backgroundColor: '#AA2200',
           padding: 20,
           width: 120
         }}
       >
         <Text
           numberOfLines={2}
-          style={{ fontWeight: 'bold', textAlign: 'center', color: 'white' }}
+          style={{
+            fontWeight: 'bold',
+            textAlign: 'center',
+            color: enabled ? 'white' : '#ffffff80'
+          }}
         >
           EL PEOR FINAL
         </Text>
@@ -135,7 +148,7 @@ function AddMatch({
   const [saving, setSaving] = useState(false)
   const enableSend = checkData(players, selectedPositions)
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: 'black' }}>
       <ScrollView
         style={{
           flex: 1,
@@ -176,9 +189,9 @@ function AddMatch({
           />
         )}
         <RoundedButton
-          underlayColor="#1133AA"
+          underlayColor="#0A5B4A"
           style={{
-            backgroundColor: '#2266FF'
+            backgroundColor: '#14B795'
           }}
           enabled={enableSend}
           useSaving={[saving, setSaving]}
@@ -195,7 +208,7 @@ function AddMatch({
             {!saving && (
               <Text
                 style={{
-                  color: 'white',
+                  color: enableSend ? 'white' : '#ffffff80',
                   textAlign: 'center',
                   fontWeight: 'bold',
                   fontSize: 20
