@@ -1,6 +1,5 @@
 import { TouchableHighlight, StyleProp, ViewStyle } from 'react-native'
-import { useState, PropsWithChildren } from 'react'
-import React from 'react'
+import React, { PropsWithChildren } from 'react'
 
 type RoundedButtonProps = PropsWithChildren<{
   enabled?: boolean
