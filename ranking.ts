@@ -1,5 +1,5 @@
-const _ = require('ramda')
 import glicko from 'glicko2'
+import { mergeAll } from 'ramda'
 
 import db from './db'
 
@@ -93,7 +93,7 @@ async function buildRanking(): Promise<{
   const ranking = new glicko.Glicko2(rankingSettings)
   const playersData = await getPlayers()
 
-  const playersRanking = _.mergeAll(
+  const playersRanking = mergeAll(
     playersData.map(player => ({
       [player.id]: {
         data: player,
