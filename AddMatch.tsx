@@ -1,7 +1,7 @@
 import R from 'ramda'
 import React, { useState } from 'react'
 import { View, Text, ActivityIndicator, Alert } from 'react-native'
-import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler'
+import { ScrollView } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import {
   PlayerData,
@@ -9,75 +9,9 @@ import {
   NewMatch,
   addMatch
 } from './ranking'
-import PlayerBox from './PlayerBox'
 import RoundedButton from './RoundedButton'
 import { NavigationStackScreenProps } from 'react-navigation-stack'
-
-interface Selection {
-  [index: string]: number
-}
-
-interface SelectPositionProps {
-  player: PlayerData
-  position: number
-  maxPosition: number
-  selectedPositions: Selection
-  enabled: boolean
-  onTap: (item: PlayerData, position: number) => void
-}
-
-function SelectPosition({
-  player,
-  position,
-  maxPosition,
-  selectedPositions,
-  enabled,
-  onTap
-}: SelectPositionProps) {
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-evenly'
-      }}
-    >
-      <PlayerBox key={player.id} player={player} selected={position} />
-      <View
-        style={{
-          flexDirection: 'row',
-          borderRadius: 10,
-          backgroundColor: '#0A1E1F',
-          overflow: 'hidden'
-        }}
-      >
-        {R.range(1, maxPosition + 1).map(n => {
-          const selected = selectedPositions[player.id] === n
-          return (
-            <TouchableHighlight
-              key={player.id + n}
-              onPress={enabled ? () => onTap(player, n) : undefined}
-              underlayColor="#AA5500"
-              style={{
-                padding: 20,
-                backgroundColor: selected ? '#14B795' : undefined
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 20,
-                  color: selected ? 'white' : '#ffffff80'
-                }}
-              >
-                {n}
-              </Text>
-            </TouchableHighlight>
-          )
-        })}
-      </View>
-    </View>
-  )
-}
+import SelectPosition, { Selection } from './components/AddMatch/SelectPosition'
 
 interface MatchesMessageProps {
   count: number
@@ -142,7 +76,7 @@ function AddMatch({
   navigation
 }: AddMatchProps & NavigationStackScreenProps) {
   const [selectedPositions, setSelectedPositions] = useState(
-    {} as { [index: string]: number }
+    {} as { [index: string]: number | undefined }
   )
   const [matchesCount, setMatchesCount] = useState<number>(0)
   const [saving, setSaving] = useState(false)
@@ -171,7 +105,10 @@ function AddMatch({
               onTap={(player, position) =>
                 setSelectedPositions({
                   ...selectedPositions,
-                  [player.id]: position
+                  [player.id]:
+                    selectedPositions[player.id] !== position
+                      ? position
+                      : undefined
                 })
               }
             />
@@ -231,7 +168,7 @@ function checkData(players: PlayerData[], selectedPositions: Selection) {
   }
   let used = R.repeat(0, players.length)
   R.keys(selectedPositions).forEach(
-    key => (used[selectedPositions[key] - 1] += 1),
+    key => (used[(selectedPositions[key] || 0) - 1] += 1),
     selectedPositions
   )
   if (used[0] !== 1) {

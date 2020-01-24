@@ -10,12 +10,14 @@ export function randomColor(seed: string, multiplier: number = 255) {
       0
     )
   const hue = (hash & 0xffffff) / 0xffffff
-  const r = Math.abs((hue > 0.5 ? hue - 1 : hue) * multiplier)
-  const g = Math.abs(
-    (hue - 0.333 > 0.5 ? hue - 1.333 : hue - 0.333) * multiplier
+  const r = Math.min(Math.abs((hue > 0.5 ? hue - 1 : hue) * multiplier), 255)
+  const g = Math.min(
+    Math.abs((hue - 0.333 > 0.5 ? hue - 1.333 : hue - 0.333) * multiplier),
+    255
   )
-  const b = Math.abs(
-    (hue - 0.666 > 0.5 ? hue - 1.666 : hue - 0.666) * multiplier
+  const b = Math.min(
+    Math.abs((hue - 0.666 > 0.5 ? hue - 1.666 : hue - 0.666) * multiplier),
+    255
   )
   return '#' + toHex(r) + toHex(g) + toHex(b)
 }
