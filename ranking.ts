@@ -10,6 +10,7 @@ export type PlayerData = {
   rd: number
   vol: number
   hat: string | undefined
+  matchesCount: number[]
 }
 
 export type PlayerWithGlicko = {
