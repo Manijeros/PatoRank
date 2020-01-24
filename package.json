@@ -19,6 +19,7 @@
     "@types/react-test-renderer": "^16.9.1",
     "airtable": "^0.7.1",
     "expo": "~36.0.0",
+    "expo-av": "^8.0.0",
     "glicko2": "^0.8.4",
     "prop-types": "*",
     "ramda": "^0.26.1",
