@@ -120,7 +120,8 @@ const Item: React.FC<ItemProps> = ({ player, index }) => {
               flexGrow: 1,
               color: 'white',
               fontWeight: 'bold',
-              fontSize: 24
+              fontSize: 24,
+              fontFamily: 'saira-bold'
             }}
           >
             {player.name}
@@ -130,7 +131,8 @@ const Item: React.FC<ItemProps> = ({ player, index }) => {
               color: '#80cbc4',
               textAlign: 'center',
               fontSize: 24,
-              marginEnd: 16
+              marginEnd: 16,
+              fontFamily: 'saira'
             }}
           >
             {Number(player.rating).toFixed(0)}
