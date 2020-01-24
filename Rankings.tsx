@@ -12,6 +12,10 @@ interface ItemProps {
   index: number
 }
 
+const FIRST_PLACE_COLOR = '#FFC107'
+const SECOND_PLACE_COLOR = '#80D4FA'
+const THIRD_PLACE_COLOR = '#FF7043'
+
 const styles = StyleSheet.create({
   gradient: {
     width: 88,
@@ -38,6 +42,19 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: 12
+  },
+  podium: {
+    borderWidth: 1,
+    borderStyle: 'solid'
+  },
+  firstPlace: {
+    borderColor: FIRST_PLACE_COLOR
+  },
+  secondPlace: {
+    borderColor: SECOND_PLACE_COLOR
+  },
+  thirdPlace: {
+    borderColor: THIRD_PLACE_COLOR
   }
 })
 
@@ -52,20 +69,33 @@ const Item: React.FC<ItemProps> = ({ player, index }) => {
         margin: 8,
         marginBottom: 0,
         borderRadius: 12,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        ...(index <= 3 && styles.podium),
+        ...(index === 1 && styles.firstPlace),
+        ...(index === 2 && styles.secondPlace),
+        ...(index === 3 && styles.thirdPlace)
       }}
     >
       <View
         style={{
           width: 88,
           height: 88,
-          backgroundColor: randomColor(player.name)
+          backgroundColor:
+            index === 1
+              ? FIRST_PLACE_COLOR
+              : index === 2
+              ? SECOND_PLACE_COLOR
+              : index === 3
+              ? THIRD_PLACE_COLOR
+              : randomColor(player.name)
         }}
       >
-        <Image
-          style={styles.gradient}
-          source={require('./assets/gradient.png')}
-        />
+        {index > 3 && (
+          <Image
+            style={styles.gradient}
+            source={require('./assets/gradient.png')}
+          />
+        )}
         <Image
           style={styles.patoOverlay}
           source={patos[((index - 1) % 4) + 1]}
