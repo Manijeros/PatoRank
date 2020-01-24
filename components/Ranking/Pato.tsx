@@ -15,7 +15,7 @@ function Pato({ player, position }: Props) {
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#0A1E1F',
-        height: 88,
+        height: 72,
         margin: 8,
         marginBottom: 0,
         borderRadius: 12,
@@ -29,7 +29,7 @@ function Pato({ player, position }: Props) {
       <View
         style={{
           width: 88,
-          height: 88,
+          height: '100%',
           backgroundColor:
             position === 1
               ? FIRST_PLACE_COLOR
@@ -128,8 +128,8 @@ const styles = StyleSheet.create({
   },
   patoOverlay: {
     width: 132,
-    height: 132,
-    resizeMode: 'stretch',
+    height: '150%',
+    resizeMode: 'contain',
     position: 'absolute',
     bottom: 0,
     start: -28
@@ -147,6 +147,7 @@ const styles = StyleSheet.create({
     fontSize: 12
   },
   podium: {
+    height: 88,
     borderWidth: 1,
     borderStyle: 'solid'
   },
