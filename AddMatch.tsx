@@ -1,7 +1,7 @@
 import R from 'ramda'
 import React, { useState } from 'react'
 import { View, Text, ActivityIndicator, Alert } from 'react-native'
-import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler'
+import { ScrollView } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import {
   PlayerData,
@@ -9,74 +9,9 @@ import {
   NewMatch,
   addMatch
 } from './ranking'
-import PlayerBox from './PlayerBox'
 import RoundedButton from './RoundedButton'
 import { NavigationStackScreenProps } from 'react-navigation-stack'
-
-interface Selection {
-  [index: string]: number
-}
-
-interface SelectPositionProps {
-  player: PlayerData
-  position: number
-  maxPosition: number
-  selectedPositions: Selection
-  enabled: boolean
-  onTap: (item: PlayerData, position: number) => void
-}
-
-function SelectPosition({
-  player,
-  position,
-  maxPosition,
-  selectedPositions,
-  enabled,
-  onTap
-}: SelectPositionProps) {
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-evenly'
-      }}
-    >
-      <PlayerBox key={player.id} player={player} selected={position} />
-      <View
-        style={{
-          flexDirection: 'row',
-          borderRadius: 10,
-          backgroundColor: '#EECC22',
-          overflow: 'hidden'
-        }}
-      >
-        {R.range(1, maxPosition + 1).map(n => {
-          return (
-            <TouchableHighlight
-              key={player.id + n}
-              onPress={enabled ? () => onTap(player, n) : undefined}
-              underlayColor="#AA5500"
-              style={{
-                padding: 20,
-                backgroundColor:
-                  selectedPositions[player.id] === n ? '#CC8800' : undefined
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 20
-                }}
-              >
-                {n}
-              </Text>
-            </TouchableHighlight>
-          )
-        })}
-      </View>
-    </View>
-  )
-}
+import SelectPosition, { Selection } from './components/AddMatch/SelectPosition'
 
 interface MatchesMessageProps {
   count: number
@@ -94,24 +29,36 @@ const MatchesMessage = ({ count, enabled, onQuit }: MatchesMessageProps) => {
       style={{
         flexDirection: 'row',
         alignItems: 'center',
-        margin: 10,
         marginTop: 0
       }}
     >
-      <Text style={{ fontSize: 18, flex: 1 }}>{message}</Text>
+      <Text
+        style={{
+          fontSize: 18,
+          flex: 1,
+          color: 'white',
+          margin: 10
+        }}
+      >
+        {message}
+      </Text>
       <RoundedButton
         onPress={onQuit}
         enabled={enabled}
         underlayColor="#116600"
         style={{
-          backgroundColor: '#22AA00',
+          backgroundColor: '#AA2200',
           padding: 20,
           width: 120
         }}
       >
         <Text
           numberOfLines={2}
-          style={{ fontWeight: 'bold', textAlign: 'center', color: 'white' }}
+          style={{
+            fontWeight: 'bold',
+            textAlign: 'center',
+            color: enabled ? 'white' : '#ffffff80'
+          }}
         >
           EL PEOR FINAL
         </Text>
@@ -129,13 +76,13 @@ function AddMatch({
   navigation
 }: AddMatchProps & NavigationStackScreenProps) {
   const [selectedPositions, setSelectedPositions] = useState(
-    {} as { [index: string]: number }
+    {} as { [index: string]: number | undefined }
   )
   const [matchesCount, setMatchesCount] = useState<number>(0)
   const [saving, setSaving] = useState(false)
   const enableSend = checkData(players, selectedPositions)
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: 'black' }}>
       <ScrollView
         style={{
           flex: 1,
@@ -158,7 +105,10 @@ function AddMatch({
               onTap={(player, position) =>
                 setSelectedPositions({
                   ...selectedPositions,
-                  [player.id]: position
+                  [player.id]:
+                    selectedPositions[player.id] !== position
+                      ? position
+                      : undefined
                 })
               }
             />
@@ -176,9 +126,9 @@ function AddMatch({
           />
         )}
         <RoundedButton
-          underlayColor="#1133AA"
+          underlayColor="#0A5B4A"
           style={{
-            backgroundColor: '#2266FF'
+            backgroundColor: '#14B795'
           }}
           enabled={enableSend}
           useSaving={[saving, setSaving]}
@@ -195,7 +145,7 @@ function AddMatch({
             {!saving && (
               <Text
                 style={{
-                  color: 'white',
+                  color: enableSend ? 'white' : '#ffffff80',
                   textAlign: 'center',
                   fontWeight: 'bold',
                   fontSize: 20
@@ -218,7 +168,7 @@ function checkData(players: PlayerData[], selectedPositions: Selection) {
   }
   let used = R.repeat(0, players.length)
   R.keys(selectedPositions).forEach(
-    key => (used[selectedPositions[key] - 1] += 1),
+    key => (used[(selectedPositions[key] || 0) - 1] += 1),
     selectedPositions
   )
   if (used[0] !== 1) {

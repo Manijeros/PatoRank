@@ -31,7 +31,7 @@ const SelectPlayers: React.FC<SelectPlayersProps> = ({
           width: '100%',
           flexDirection: 'row',
           flexWrap: 'wrap',
-          justifyContent: 'space-between'
+          justifyContent: 'space-evenly'
         }}
       >
         {players.map(item => (
@@ -55,14 +55,14 @@ function SelectPlayersAndContinue({
   const { players, selectedIds } = props
   const enableContinue = selectedIds.length > 1
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: 'black' }}>
       <SelectPlayers {...props} />
       <SafeAreaView style={{ paddingTop: 0 }}>
         <RoundedButton
-          underlayColor="#1133AA"
+          underlayColor="#0A5B4A"
           enabled={enableContinue}
           style={{
-            backgroundColor: '#2266FF'
+            backgroundColor: '#14B795'
           }}
           onPress={() =>
             navigation.push('AddMatch', {
@@ -72,7 +72,7 @@ function SelectPlayersAndContinue({
         >
           <Text
             style={{
-              color: 'white',
+              color: enableContinue ? 'white' : '#ffffff80',
               textAlign: 'center',
               fontWeight: 'bold',
               fontSize: 20

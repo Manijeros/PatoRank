@@ -2,6 +2,8 @@ import React from 'react'
 import { TouchableHighlight } from 'react-native-gesture-handler'
 import { Image, Text, View } from 'react-native'
 import { PlayerData } from './ranking'
+import { randomColor } from './randomColor'
+import { patos } from './patitos'
 
 interface PlayerViewProps {
   player: PlayerData
@@ -10,13 +12,6 @@ interface PlayerViewProps {
   selectedCount?: number
 }
 
-const patos = [
-  require('./assets/pato0.png'),
-  require('./assets/pato1.png'),
-  require('./assets/pato2.png'),
-  require('./assets/pato3.png'),
-  require('./assets/pato4.png')
-]
 const colors = ['', '#FFFFFF', '#7D7D7D', '#F7E05A', '#CD6B1D']
 const underlayColors = ['#9D9D9D', '#575757', '#AD9D3F', '#8F4B14', '#000000']
 
@@ -35,10 +30,11 @@ const PlayerBox: React.FC<PlayerViewProps> = ({
       style={[
         {
           overflow: 'hidden',
-          height: 100,
-          width: 100,
+          height: 114,
+          width: 114,
           borderRadius: 5,
-          margin: 10
+          marginTop: 8,
+          backgroundColor: randomColor(player.name, 128)
         },
         selected > 0 && {
           backgroundColor: colors[selected]
@@ -54,7 +50,7 @@ const PlayerBox: React.FC<PlayerViewProps> = ({
         }}
       >
         <Image
-          source={patos[selected]}
+          source={require('./assets/gradientBottom.png')}
           style={{
             width: '100%',
             height: '100%',
@@ -64,31 +60,52 @@ const PlayerBox: React.FC<PlayerViewProps> = ({
           }}
         />
         <Image
+          source={patos[selected]}
+          style={{
+            width: '100%',
+            height: 100,
+            alignSelf: 'center',
+            resizeMode: 'contain',
+            position: 'absolute',
+            bottom: 34
+          }}
+        />
+        <Image
           source={{
             uri: player.hat
           }}
           style={{
             width: '100%',
-            height: '100%',
+            height: 100,
             alignSelf: 'center',
             resizeMode: 'contain',
-            position: 'absolute'
+            position: 'absolute',
+            bottom: 34
           }}
         />
-        <Text
-          numberOfLines={2}
+        <View
           style={{
-            color: '#ffffff',
-            fontSize: 13,
-            textAlign: 'center',
-            backgroundColor: '#00000066',
-            textShadowColor: 'black',
-            textShadowRadius: 1,
-            textShadowOffset: { width: 0, height: 0 }
+            height: 34,
+            backgroundColor: selected > 0 ? '#14B795' : '#0A1E1F',
+            justifyContent: 'center'
           }}
         >
-          {player.name}
-        </Text>
+          <Text
+            numberOfLines={2}
+            style={{
+              color: '#E0F2F1',
+              fontSize: 16,
+              fontWeight: 'bold',
+              textAlign: 'center',
+              textAlignVertical: 'center',
+              textShadowColor: 'black',
+              textShadowRadius: 1,
+              textShadowOffset: { width: 0, height: 0 }
+            }}
+          >
+            {player.name}
+          </Text>
+        </View>
       </View>
     </TouchableHighlight>
   )

@@ -9,7 +9,8 @@ import { NavigationStackScreenProps } from 'react-navigation-stack'
 const actions = [
   {
     text: 'Match',
-    name: 'bt_match'
+    name: 'bt_match',
+    color: '#14B795'
   }
 ]
 
@@ -24,6 +25,8 @@ function Home({
       <Rankings players={players} setShouldUpdate={setShouldUpdate} />
       {players && (
         <FloatingAction
+          color="#14B795"
+          overlayColor="#00000080"
           actions={actions}
           onPressItem={name => {
             switch (name) {

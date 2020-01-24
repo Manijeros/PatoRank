@@ -35,7 +35,7 @@ export default function RoundedButton({
         },
         style,
         !enabled && {
-          backgroundColor: '#666666'
+          backgroundColor: '#0A5B4A'
         }
       ]}
       onPress={
