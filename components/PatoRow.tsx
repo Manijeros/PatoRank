@@ -1,9 +1,17 @@
 import React, { PropsWithChildren } from 'react'
-import { View, Image, StyleSheet, StyleProp, ViewStyle } from 'react-native'
+import {
+  View,
+  Image,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  TouchableOpacity
+} from 'react-native'
 
 import { PlayerData } from '../ranking'
 import { randomColor } from '../randomColor'
 import { patos } from '../patitos'
+import { playSound } from '../sound'
 
 function PatoRow({
   player,
@@ -39,25 +47,30 @@ function PatoRow({
         }
       ]}
     >
-      <View
-        style={[
-          {
-            width: 88,
-            height: '100%',
-            backgroundColor: randomColor(player.name)
-          },
-          patoBackgroundStyle
-        ]}
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => playSound(require('../assets/cuac.mp3'))}
       >
-        {showGradient && (
-          <Image
-            style={styles.gradient}
-            source={require('../assets/gradient.png')}
-          />
-        )}
-        <Image style={styles.patoOverlay} source={patos[patoIndex]} />
-        <Image style={styles.patoOverlay} source={{ uri: player.hat }} />
-      </View>
+        <View
+          style={[
+            {
+              width: 88,
+              height: '100%',
+              backgroundColor: randomColor(player.name)
+            },
+            patoBackgroundStyle
+          ]}
+        >
+          {showGradient && (
+            <Image
+              style={styles.gradient}
+              source={require('../assets/gradient.png')}
+            />
+          )}
+          <Image style={styles.patoOverlay} source={patos[patoIndex]} />
+          <Image style={styles.patoOverlay} source={{ uri: player.hat }} />
+        </View>
+      </TouchableOpacity>
       <View
         style={{
           flex: 1,
