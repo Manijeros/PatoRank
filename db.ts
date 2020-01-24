@@ -7,6 +7,7 @@ type PlayerType = {
   rd: number
   vol: number
   hat: string | undefined
+  matchesCount: number[]
 }
 
 type MatchType = {
@@ -35,6 +36,12 @@ function parseAttachment(
   return picture[0].url
 }
 
+type Links = Array<string> | undefined
+
+function parseMatchesCount(c1: Links, c2: Links, c3: Links) {
+  return [c1 ? c1.length : 0, c2 ? c2.length : 0, c3 ? c3.length : 0]
+}
+
 async function getPlayers() {
   return new Promise<PlayerType[]>((resolve, reject) => {
     // TODO: This returns up to 100 players
@@ -53,7 +60,12 @@ async function getPlayers() {
               rating: record.get('rating'),
               rd: record.get('rd'),
               vol: record.get('vol'),
-              hat: parseAttachment(record.get('hat'))
+              hat: parseAttachment(record.get('hat')),
+              matchesCount: parseMatchesCount(
+                record.get('Matches 1'),
+                record.get('Matches 2'),
+                record.get('Matches 3')
+              )
             }))
             .sort((a, b) => b.rating - a.rating)
         )

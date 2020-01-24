@@ -1,4 +1,5 @@
 import React from 'react'
+import R from 'ramda'
 import { Text, View, StyleSheet } from 'react-native'
 
 import { PlayerData } from '../../ranking'
@@ -59,15 +60,15 @@ function Pato({ player, position }: Props) {
           flexDirection: 'row'
         }}
       >
-        <View style={styles.badge}>
-          <Text style={[styles.badgeText, { color: '#ffc107' }]}>🏆 ###</Text>
-        </View>
-        <View style={styles.badge}>
-          <Text style={[styles.badgeText, { color: '#81d4fa' }]}>🥈 ###</Text>
-        </View>
-        <View style={styles.badge}>
-          <Text style={[styles.badgeText, { color: '#ff7043' }]}>🥉 ###</Text>
-        </View>
+        {R.range(0, 3).map(i => {
+          return player.matchesCount[i] > 0 && (
+            <View style={styles.badge} key={i}>
+              <Text style={[styles.badgeText, { color: '#ffc107' }]}>
+                {thropies[i]} {player.matchesCount[i]}
+              </Text>
+            </View>
+          )
+        })}
       </View>
     </PatoRow>
   )
@@ -81,6 +82,7 @@ interface Props {
 export default Pato
 
 const podiumColors = ['#FFC107', '#80D4FA', '#FF7043']
+const thropies = ['🏆', '🥈', '🥉']
 
 const styles = StyleSheet.create({
   gradient: {
