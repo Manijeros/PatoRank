@@ -1,162 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Text, View, Image, StyleSheet, RefreshControl } from 'react-native'
+import { Text, View, StyleSheet, RefreshControl } from 'react-native'
 
 import { FlatList } from 'react-native-gesture-handler'
-import { PlayerData } from './ranking'
 import { PlayersAwareComponentProps } from './PlayersAware'
-import { randomColor } from './randomColor'
-import { patos } from './patitos'
-
-interface ItemProps {
-  player: PlayerData
-  index: number
-}
-
-const FIRST_PLACE_COLOR = '#FFC107'
-const SECOND_PLACE_COLOR = '#80D4FA'
-const THIRD_PLACE_COLOR = '#FF7043'
-
-const styles = StyleSheet.create({
-  gradient: {
-    width: 88,
-    height: 88,
-    resizeMode: 'stretch',
-    position: 'absolute'
-  },
-  patoOverlay: {
-    width: 132,
-    height: 132,
-    resizeMode: 'stretch',
-    position: 'absolute',
-    bottom: 0,
-    start: -28
-  },
-  badge: {
-    backgroundColor: 'black',
-    height: 24,
-    borderRadius: 5,
-    marginEnd: 4,
-    paddingStart: 9,
-    paddingEnd: 9,
-    justifyContent: 'center'
-  },
-  badgeText: {
-    fontSize: 12
-  },
-  podium: {
-    borderWidth: 1,
-    borderStyle: 'solid'
-  },
-  firstPlace: {
-    borderColor: FIRST_PLACE_COLOR
-  },
-  secondPlace: {
-    borderColor: SECOND_PLACE_COLOR
-  },
-  thirdPlace: {
-    borderColor: THIRD_PLACE_COLOR
-  }
-})
-
-const Item: React.FC<ItemProps> = ({ player, index }) => {
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#0A1E1F',
-        height: 88,
-        margin: 8,
-        marginBottom: 0,
-        borderRadius: 12,
-        overflow: 'hidden',
-        ...(index <= 3 && styles.podium),
-        ...(index === 1 && styles.firstPlace),
-        ...(index === 2 && styles.secondPlace),
-        ...(index === 3 && styles.thirdPlace)
-      }}
-    >
-      <View
-        style={{
-          width: 88,
-          height: 88,
-          backgroundColor:
-            index === 1
-              ? FIRST_PLACE_COLOR
-              : index === 2
-              ? SECOND_PLACE_COLOR
-              : index === 3
-              ? THIRD_PLACE_COLOR
-              : randomColor(player.name)
-        }}
-      >
-        {index > 3 && (
-          <Image
-            style={styles.gradient}
-            source={require('./assets/gradient.png')}
-          />
-        )}
-        <Image
-          style={styles.patoOverlay}
-          source={patos[((index - 1) % 4) + 1]}
-        />
-        <Image style={styles.patoOverlay} source={{ uri: player.hat }} />
-      </View>
-      <View
-        style={{
-          flex: 1,
-          height: '100%',
-          paddingStart: 16,
-          justifyContent: 'space-evenly'
-        }}
-      >
-        <View
-          style={{
-            flexDirection: 'row'
-          }}
-        >
-          <Text
-            style={{
-              flexGrow: 1,
-              color: 'white',
-              fontWeight: 'bold',
-              fontSize: 24,
-              fontFamily: 'saira-bold'
-            }}
-          >
-            {player.name}
-          </Text>
-          <Text
-            style={{
-              color: '#80cbc4',
-              textAlign: 'center',
-              fontSize: 24,
-              marginEnd: 16,
-              fontFamily: 'saira'
-            }}
-          >
-            {Number(player.rating).toFixed(0)}
-          </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row'
-          }}
-        >
-          <View style={styles.badge}>
-            <Text style={[styles.badgeText, { color: '#ffc107' }]}>🏆 ###</Text>
-          </View>
-          <View style={styles.badge}>
-            <Text style={[styles.badgeText, { color: '#81d4fa' }]}>🥈 ###</Text>
-          </View>
-          <View style={styles.badge}>
-            <Text style={[styles.badgeText, { color: '#ff7043' }]}>🥉 ###</Text>
-          </View>
-        </View>
-      </View>
-    </View>
-  )
-}
+import Pato from './components/Ranking/Pato'
 
 export default function Rankings({
   players,
@@ -207,7 +54,7 @@ export default function Rankings({
       }
       data={players}
       renderItem={({ item, index }) => (
-        <Item player={item} index={index + 1} key={item.id} />
+        <Pato player={item} position={index + 1} key={item.id} />
       )}
       keyExtractor={player => player.id}
     />
