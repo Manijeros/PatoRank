@@ -3,9 +3,9 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 import * as Font from 'expo-font'
 
-import Home from '@src/Home'
-import SelectPlayers from '@src/SelectPlayers'
-import AddMatch from '@src/AddMatch'
+import Home from '@src/screens/Home'
+import SelectPlayers from '@src/screens/SelectPlayers'
+import AddMatch from '@src/screens/AddMatch'
 import NotReady from '@src/screens/NotReady'
 
 import db from '@src/db'
