@@ -1,8 +1,8 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { FloatingAction } from 'react-native-floating-action'
-import Rankings from './Rankings'
-import PlayersAware, { PlayersAwareComponentProps } from './PlayersAware'
+import Rankings from '@src/Rankings'
+import PlayersAware, { PlayersAwareComponentProps } from '@src/PlayersAware'
 import { NavigationEvents } from 'react-navigation'
 import { NavigationStackScreenProps } from 'react-navigation-stack'
 

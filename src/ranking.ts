@@ -1,7 +1,7 @@
 import glicko from 'glicko2'
 import { mergeAll } from 'ramda'
 
-import db from './db'
+import db from '@src/db'
 
 export type PlayerData = {
   id: string

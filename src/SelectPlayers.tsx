@@ -3,9 +3,9 @@ import React, { useState } from 'react'
 import { Text, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { PlayerData } from './ranking'
-import PlayerBox from './PlayerBox'
-import RoundedButton from './RoundedButton'
+import { PlayerData } from '@src/ranking'
+import PlayerBox from '@src/PlayerBox'
+import RoundedButton from '@src/RoundedButton'
 import { NavigationStackScreenProps } from 'react-navigation-stack'
 
 interface SelectPlayersProps {

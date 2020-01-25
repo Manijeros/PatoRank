@@ -3,12 +3,12 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 import * as Font from 'expo-font'
 
-import Home from './Home'
-import SelectPlayers from './SelectPlayers'
-import AddMatch from './AddMatch'
-import NotReady from './screens/NotReady'
+import Home from '@src/Home'
+import SelectPlayers from '@src/SelectPlayers'
+import AddMatch from '@src/AddMatch'
+import NotReady from '@src/screens/NotReady'
 
-import db from './db'
+import db from '@src/db'
 
 const MainNavigator = createStackNavigator(
   {
@@ -43,8 +43,8 @@ const Main = createAppContainer(RootNavigator)
 function App() {
   useEffect(() => {
     Font.loadAsync({
-      saira: require('./assets/fonts/Saira-Regular.ttf'),
-      'saira-bold': require('./assets/fonts/Saira-Bold.ttf')
+      saira: require('@src/assets/fonts/Saira-Regular.ttf'),
+      'saira-bold': require('@src/assets/fonts/Saira-Bold.ttf')
     })
   }, [])
 

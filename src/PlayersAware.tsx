@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import { getPlayers, PlayerData } from './ranking'
+import { getPlayers, PlayerData } from '@src/ranking'
 
 export interface PlayersAwareComponentProps {
   players: PlayerData[] | undefined

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Text, View, StyleSheet, RefreshControl } from 'react-native'
 
 import { FlatList } from 'react-native-gesture-handler'
-import { PlayersAwareComponentProps } from './PlayersAware'
-import Pato from './components/Ranking/Pato'
+import { PlayersAwareComponentProps } from '@src/PlayersAware'
+import Pato from '@src/components/Ranking/Pato'
 
 export default function Rankings({
   players,
