@@ -61,12 +61,14 @@ function Pato({ player, position }: Props) {
         }}
       >
         {R.range(0, 3).map(i => {
-          return player.matchesCount[i] > 0 && (
-            <View style={styles.badge} key={i}>
-              <Text style={[styles.badgeText, { color: '#ffc107' }]}>
-                {thropies[i]} {player.matchesCount[i]}
-              </Text>
-            </View>
+          return (
+            player.matchesCount[i] > 0 && (
+              <View style={styles.badge} key={i}>
+                <Text style={[styles.badgeText, { color: '#ffc107' }]}>
+                  {thropies[i]} {player.matchesCount[i]}
+                </Text>
+              </View>
+            )
           )
         })}
       </View>
