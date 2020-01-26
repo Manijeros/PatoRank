@@ -45,7 +45,7 @@ function Pato({ player, position }: Props) {
         </Text>
         <Text
           style={{
-            color: '#80cbc4',
+            color: isInPodium ? podiumColors[position - 1] : '#80cbc4',
             textAlign: 'center',
             fontSize,
             marginEnd: 16,
