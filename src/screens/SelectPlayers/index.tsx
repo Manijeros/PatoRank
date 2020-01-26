@@ -33,7 +33,9 @@ const SelectPlayers: React.FC<SelectPlayersProps> = ({
           width: '100%',
           flexDirection: 'row',
           flexWrap: 'wrap',
-          justifyContent: 'space-evenly'
+          justifyContent: 'space-evenly',
+          padding: 8,
+          marginTop: -8
         }}
       >
         {players.map(item => (
@@ -43,6 +45,7 @@ const SelectPlayers: React.FC<SelectPlayersProps> = ({
             onTap={() => onTap(item)}
             selected={selectedIds.indexOf(item.id) + 1}
             selectedCount={selectedIds.length}
+            style={{ marginTop: 8 }}
           />
         ))}
       </View>

@@ -10,6 +10,7 @@ interface PlayerViewProps {
   onTap?: () => void
   selected: number
   selectedCount?: number
+  style: React.ComponentProps<typeof View>['style']
 }
 
 const colors = ['', '#FFFFFF', '#7D7D7D', '#F7E05A', '#CD6B1D']
@@ -19,7 +20,8 @@ const PlayerBox: React.FC<PlayerViewProps> = ({
   player,
   onTap,
   selected,
-  selectedCount
+  selectedCount,
+  style
 }) => {
   return (
     <TouchableHighlight
@@ -33,12 +35,12 @@ const PlayerBox: React.FC<PlayerViewProps> = ({
           height: 114,
           width: 114,
           borderRadius: 5,
-          marginTop: 8,
           backgroundColor: randomColor(player.name, 128)
         },
         selected > 0 && {
           backgroundColor: colors[selected]
-        }
+        },
+        style
       ]}
     >
       <View
