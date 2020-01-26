@@ -2,8 +2,8 @@ import React from 'react'
 import R from 'ramda'
 import { Text, View, StyleSheet } from 'react-native'
 
-import { PlayerData } from '../../ranking'
-import PatoRow from '../PatoRow'
+import { PlayerData } from '@src/ranking'
+import PatoRow from '@src/components/PatoRow'
 
 function Pato({ player, position }: Props) {
   const isInPodium = position <= 3
@@ -61,12 +61,14 @@ function Pato({ player, position }: Props) {
         }}
       >
         {R.range(0, 3).map(i => {
-          return player.matchesCount[i] > 0 && (
-            <View style={styles.badge} key={i}>
-              <Text style={[styles.badgeText, { color: '#ffc107' }]}>
-                {thropies[i]} {player.matchesCount[i]}
-              </Text>
-            </View>
+          return (
+            player.matchesCount[i] > 0 && (
+              <View style={styles.badge} key={i}>
+                <Text style={[styles.badgeText, { color: '#ffc107' }]}>
+                  {thropies[i]} {player.matchesCount[i]}
+                </Text>
+              </View>
+            )
           )
         })}
       </View>

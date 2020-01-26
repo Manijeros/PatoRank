@@ -8,10 +8,12 @@ import {
   updateRankingWithMatch,
   NewMatch,
   addMatch
-} from './ranking'
-import RoundedButton from './RoundedButton'
+} from '@src/ranking'
+import RoundedButton from '@src/RoundedButton'
 import { NavigationStackScreenProps } from 'react-navigation-stack'
-import SelectPosition, { Selection } from './components/AddMatch/SelectPosition'
+import SelectPosition, {
+  Selection
+} from '@src/components/AddMatch/SelectPosition'
 
 interface MatchesMessageProps {
   count: number

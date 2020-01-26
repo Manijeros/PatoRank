@@ -1,9 +1,9 @@
 import React from 'react'
 import { TouchableHighlight } from 'react-native-gesture-handler'
 import { Image, Text, View } from 'react-native'
-import { PlayerData } from './ranking'
-import { randomColor } from './randomColor'
-import { patos } from './patitos'
+import { PlayerData } from '@src/ranking'
+import { randomColor } from '@src/randomColor'
+import { patos } from '@src/patitos'
 
 interface PlayerViewProps {
   player: PlayerData

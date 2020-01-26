@@ -2,8 +2,8 @@ import React from 'react'
 import R from 'ramda'
 import { Text, View, StyleSheet, TouchableHighlight } from 'react-native'
 
-import { PlayerData } from '../../ranking'
-import PatoRow from '../PatoRow'
+import { PlayerData } from '@src/ranking'
+import PatoRow from '@src/components/PatoRow'
 
 function SelectPosition({
   player,

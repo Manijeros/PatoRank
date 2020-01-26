@@ -8,10 +8,10 @@ import {
   TouchableOpacity
 } from 'react-native'
 
-import { PlayerData } from '../ranking'
-import { randomColor } from '../randomColor'
-import { patos } from '../patitos'
-import { playSound } from '../sound'
+import { PlayerData } from '@src/ranking'
+import { randomColor } from '@src/randomColor'
+import { patos } from '@src/patitos'
+import { playSound } from '@src/sound'
 
 function PatoRow({
   player,
