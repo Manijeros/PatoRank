@@ -3,10 +3,12 @@ import React, { useState } from 'react'
 import { Text, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { NavigationStackScreenProps } from 'react-navigation-stack'
+
 import { PlayerData } from '@src/ranking'
 import PlayerBox from '@src/PlayerBox'
 import RoundedButton from '@src/RoundedButton'
-import { NavigationStackScreenProps } from 'react-navigation-stack'
+import ForeverAlone from '@src/components/AddMatch/ForeverAlone'
 
 interface SelectPlayersProps {
   players: PlayerData[]
@@ -31,7 +33,9 @@ const SelectPlayers: React.FC<SelectPlayersProps> = ({
           width: '100%',
           flexDirection: 'row',
           flexWrap: 'wrap',
-          justifyContent: 'space-evenly'
+          justifyContent: 'space-evenly',
+          padding: 8,
+          marginTop: -8
         }}
       >
         {players.map(item => (
@@ -41,6 +45,7 @@ const SelectPlayers: React.FC<SelectPlayersProps> = ({
             onTap={() => onTap(item)}
             selected={selectedIds.indexOf(item.id) + 1}
             selectedCount={selectedIds.length}
+            style={{ marginTop: 8 }}
           />
         ))}
       </View>
@@ -57,12 +62,14 @@ function SelectPlayersAndContinue({
   return (
     <View style={{ flex: 1, backgroundColor: 'black' }}>
       <SelectPlayers {...props} />
-      <SafeAreaView style={{ paddingTop: 0 }}>
+      <SafeAreaView style={{ paddingTop: 0, marginLeft: 16, marginRight: 16 }}>
+        {!enableContinue && <ForeverAlone />}
         <RoundedButton
           underlayColor="#0A5B4A"
           enabled={enableContinue}
           style={{
-            backgroundColor: '#14B795'
+            backgroundColor: '#14B795',
+            margin: 0
           }}
           onPress={() =>
             navigation.push('AddMatch', {
