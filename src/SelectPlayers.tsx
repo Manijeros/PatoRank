@@ -3,10 +3,12 @@ import React, { useState } from 'react'
 import { Text, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { NavigationStackScreenProps } from 'react-navigation-stack'
+
 import { PlayerData } from '@src/ranking'
 import PlayerBox from '@src/PlayerBox'
 import RoundedButton from '@src/RoundedButton'
-import { NavigationStackScreenProps } from 'react-navigation-stack'
+import PatoGrid from '@src/components/PatoGrid'
 
 interface SelectPlayersProps {
   players: PlayerData[]
@@ -26,14 +28,7 @@ const SelectPlayers: React.FC<SelectPlayersProps> = ({
         margin: 0
       }}
     >
-      <View
-        style={{
-          width: '100%',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'space-evenly'
-        }}
-      >
+      <PatoGrid>
         {players.map(item => (
           <PlayerBox
             key={item.id}
@@ -43,7 +38,7 @@ const SelectPlayers: React.FC<SelectPlayersProps> = ({
             selectedCount={selectedIds.length}
           />
         ))}
-      </View>
+      </PatoGrid>
     </ScrollView>
   )
 }

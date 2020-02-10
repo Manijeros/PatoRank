@@ -10,6 +10,7 @@ interface PlayerViewProps {
   onTap?: () => void
   selected: number
   selectedCount?: number
+  onLayout: React.ComponentProps<typeof View>['onLayout']
 }
 
 const colors = ['', '#FFFFFF', '#7D7D7D', '#F7E05A', '#CD6B1D']
@@ -19,10 +20,12 @@ const PlayerBox: React.FC<PlayerViewProps> = ({
   player,
   onTap,
   selected,
-  selectedCount
+  selectedCount,
+  onLayout
 }) => {
   return (
     <TouchableHighlight
+      onLayout={onLayout}
       onPress={onTap}
       underlayColor={
         underlayColors[selected > 0 ? selected - 1 : selectedCount || 0]
