@@ -6,9 +6,12 @@ import { PlayersAwareComponentProps } from '@src/PlayersAware'
 import Pato from '@src/components/Ranking/Pato'
 
 export default function Rankings({
+  currentUserId,
   players,
   setShouldUpdate
-}: PlayersAwareComponentProps) {
+}: {
+  currentUserId?: string
+} & PlayersAwareComponentProps) {
   const [refreshing, setRefreshing] = useState(false)
   useEffect(() => {
     setRefreshing(false)
@@ -54,7 +57,12 @@ export default function Rankings({
       }
       data={players}
       renderItem={({ item, index }) => (
-        <Pato player={item} position={index + 1} key={item.id} />
+        <Pato
+          player={item}
+          position={index + 1}
+          key={item.id}
+          isCurrentUser={currentUserId === item.id}
+        />
       )}
       keyExtractor={player => player.id}
     />

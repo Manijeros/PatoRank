@@ -1,4 +1,5 @@
 import Airtable from 'airtable'
+import MD5 from 'react-native-md5'
 
 type PlayerType = {
   id: string
@@ -96,4 +97,39 @@ async function insertMatch(match: MatchType) {
   return base<MatchType>('Matches').create(match)
 }
 
-export default { setup, getPlayers, updatePlayers, insertMatch }
+export type Auth = {
+  id: string
+  name: string
+}
+
+async function authenticate(username: string, password: string) {
+  username = username.toLowerCase()
+  const hashed = 'a:' + MD5.hex_md5(username + '-' + password).toLowerCase()
+  return new Promise<Auth>((resolve, reject) => {
+    // TODO: This returns up to 100 players
+    base<PlayerType>('Players')
+      .select()
+      .firstPage((err, records) => {
+        if (err) {
+          return reject(err)
+        }
+        const retval = records
+          .filter(
+            record =>
+              record.get('name').toLowerCase() === username &&
+              record.get('password') === hashed
+          )
+          .map(record => ({
+            id: record.id,
+            name: record.get('name')
+          }))[0]
+        if (retval) {
+          resolve(retval)
+        } else {
+          reject('Username or password incorrect!')
+        }
+      })
+  })
+}
+
+export default { setup, getPlayers, updatePlayers, insertMatch, authenticate }

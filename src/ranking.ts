@@ -108,3 +108,7 @@ async function buildRanking(): Promise<{
     players: playersRanking
   }
 }
+
+export async function authenticate(username: string, password: string) {
+  return db.authenticate(username, password)
+}

@@ -5,7 +5,7 @@ import { Text, View, StyleSheet } from 'react-native'
 import { PlayerData } from '@src/ranking'
 import PatoRow from '@src/components/PatoRow'
 
-function Pato({ player, position }: Props) {
+function Pato({ player, position, isCurrentUser }: Props) {
   const isInPodium = position <= 3
   const fontSize = isInPodium ? 24 : 18
 
@@ -15,6 +15,9 @@ function Pato({ player, position }: Props) {
         isInPodium && styles.podium,
         isInPodium && {
           borderColor: podiumColors[position - 1]
+        },
+        isCurrentUser && {
+          backgroundColor: '#103739'
         }
       ]}
       player={player}
@@ -79,6 +82,7 @@ function Pato({ player, position }: Props) {
 interface Props {
   player: PlayerData
   position: number
+  isCurrentUser: boolean
 }
 
 export default Pato
