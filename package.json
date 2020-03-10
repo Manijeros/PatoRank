@@ -34,7 +34,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
-    "@types/airtable": "^0.5.6",
     "@types/jest": "^24.0.25",
     "@types/node": "^13.1.8",
     "@types/ramda": "^0.26.39",

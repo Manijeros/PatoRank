@@ -9,7 +9,7 @@ export type PlayerData = {
   rating: number
   rd: number
   vol: number
-  hat: string | undefined
+  hat?: string
   matchesCount: number[]
 }
 

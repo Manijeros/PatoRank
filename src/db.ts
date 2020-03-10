@@ -1,4 +1,4 @@
-import Airtable from 'airtable'
+import Airtable, { Attachments } from 'airtable'
 import MD5 from 'react-native-md5'
 
 type PlayerType = {
@@ -7,8 +7,20 @@ type PlayerType = {
   rating: number
   rd: number
   vol: number
-  hat: string | undefined
+  hat?: string
   matchesCount: number[]
+}
+type PlayerBaseType = {
+  name: string
+  rating: number
+  rd: number
+  vol: number
+  hat: Attachments
+  password: string
+  'Matches 1'?: string[]
+  'Matches 2'?: string[]
+  'Matches 3'?: string[]
+  'Matches 4'?: string[]
 }
 
 type MatchType = {
@@ -29,26 +41,23 @@ function setup(baseId: string, secret: string) {
 }
 
 function parseAttachment(
-  picture: { url: string }[] | undefined
+  picture?: Attachments
 ): string | undefined {
-  if (picture == null || picture.length === 0) {
+  if (!picture || picture.length === 0) {
     return undefined
   }
   return picture[0].url
 }
 
-type Links = Array<string> | undefined
-
-function parseMatchesCount(c1: Links, c2: Links, c3: Links) {
+function parseMatchesCount(c1?: string[], c2?: string[], c3?: string[]) {
   return [c1 ? c1.length : 0, c2 ? c2.length : 0, c3 ? c3.length : 0]
 }
 
 async function getPlayers() {
   return new Promise<PlayerType[]>((resolve, reject) => {
-    // TODO: This returns up to 100 players
-    base<PlayerType>('Players')
+    base<PlayerBaseType>('Players')
       .select()
-      .firstPage((err, records) => {
+      .all((err, records) => {
         if (err) {
           return reject(err)
         }
@@ -57,15 +66,15 @@ async function getPlayers() {
           records
             .map(record => ({
               id: record.id,
-              name: record.get('name'),
-              rating: record.get('rating'),
-              rd: record.get('rd'),
-              vol: record.get('vol'),
+              name: record.fields.name,
+              rating: record.fields.rating,
+              rd: record.fields.rd,
+              vol: record.fields.vol,
               hat: parseAttachment(record.get('hat')),
               matchesCount: parseMatchesCount(
-                record.get('Matches 1'),
-                record.get('Matches 2'),
-                record.get('Matches 3')
+                record.fields['Matches 1'],
+                record.fields['Matches 2'],
+                record.fields['Matches 3']
               )
             }))
             .sort((a, b) => b.rating - a.rating)
@@ -83,7 +92,7 @@ async function updatePlayers(
   }>
 ) {
   return new Promise((resolve, reject) => {
-    base<PlayerType>('Players').update(
+    base<PlayerBaseType>('Players').update(
       updatedPlayersData.map(data => ({
         id: data.id,
         fields: { rating: data.rating, rd: data.rd, vol: data.vol }
@@ -106,23 +115,19 @@ async function authenticate(username: string, password: string) {
   username = username.toLowerCase()
   const hashed = 'a:' + MD5.hex_md5(username + '-' + password).toLowerCase()
   return new Promise<Auth>((resolve, reject) => {
-    // TODO: This returns up to 100 players
-    base<PlayerType>('Players')
-      .select()
+    base<PlayerBaseType>('Players')
+      .select({
+        filterByFormula: `AND(LOWER(name) = '${username}', password = '${hashed}')`
+      })
       .firstPage((err, records) => {
         if (err) {
           return reject(err)
         }
-        const retval = records
-          .filter(
-            record =>
-              record.get('name').toLowerCase() === username &&
-              record.get('password') === hashed
-          )
-          .map(record => ({
-            id: record.id,
-            name: record.get('name')
-          }))[0]
+        console.log(records)
+        const retval = records.map(record => ({
+          id: record.id,
+          name: record.fields.name
+        }))[0]
         if (retval) {
           resolve(retval)
         } else {
