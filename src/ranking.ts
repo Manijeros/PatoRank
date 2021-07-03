@@ -9,7 +9,7 @@ export type PlayerData = {
   rating: number
   rd: number
   vol: number
-  hat: string | undefined
+  hat?: string
   matchesCount: number[]
 }
 
@@ -107,4 +107,8 @@ async function buildRanking(): Promise<{
     ranking,
     players: playersRanking
   }
+}
+
+export async function authenticate(username: string, password: string) {
+  return db.authenticate(username, password)
 }

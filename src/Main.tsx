@@ -6,6 +6,7 @@ import * as Font from 'expo-font'
 import Home from '@src/screens/Home'
 import SelectPlayers from '@src/screens/SelectPlayers'
 import AddMatch from '@src/screens/AddMatch'
+import Login from '@src/screens/Login'
 import NotReady from '@src/screens/NotReady'
 
 import db from '@src/db'
@@ -14,7 +15,8 @@ const MainNavigator = createStackNavigator(
   {
     Rankings: { screen: Home },
     SelectPlayers,
-    AddMatch
+    AddMatch,
+    Login
   },
   {
     defaultNavigationOptions: {
