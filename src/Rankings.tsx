@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Text, View, StyleSheet, RefreshControl } from 'react-native'
+import { Text, View, RefreshControl } from 'react-native'
 
 import { FlatList } from 'react-native-gesture-handler'
 import { PlayersAwareComponentProps } from '@src/PlayersAware'

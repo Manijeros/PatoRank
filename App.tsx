@@ -1,6 +1,3 @@
-import React from 'react'
-import Main from '@src/Main'
+import App from "@src/app";
 
-export default function App() {
-  return <Main />
-}
+export default App;
