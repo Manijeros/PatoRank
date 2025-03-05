@@ -3,12 +3,13 @@ import React, { useState } from 'react'
 import { Text, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { NavigationStackScreenProps } from 'react-navigation-stack'
+import { StackScreenProps } from '@react-navigation/stack'
 
 import { PlayerData } from '@src/ranking'
 import PlayerBox from '@src/PlayerBox'
 import RoundedButton from '@src/RoundedButton'
 import ForeverAlone from '@src/components/AddMatch/ForeverAlone'
+import { PatoRoutesParams } from '@src/types/routes'
 
 interface SelectPlayersProps {
   players: PlayerData[]
@@ -56,7 +57,7 @@ const SelectPlayers: React.FC<SelectPlayersProps> = ({
 function SelectPlayersAndContinue({
   navigation,
   ...props
-}: SelectPlayersProps & NavigationStackScreenProps) {
+}: SelectPlayersProps & StackScreenProps<PatoRoutesParams, "SelectPlayers">) {
   const { players, selectedIds } = props
   const enableContinue = selectedIds.length > 1
   return (
@@ -107,12 +108,12 @@ function toggle(
   )
 }
 
-export default function SelectPlayersScreen(props: NavigationStackScreenProps) {
+export default function SelectPlayersScreen(props: StackScreenProps<PatoRoutesParams, "SelectPlayers">) {
   const [selected, setSelected] = useState([] as string[])
   return (
     <SelectPlayersAndContinue
       {...props}
-      players={props.navigation.getParam('players')}
+      players={props.route.params.players}
       selectedIds={selected}
       onTap={item => toggle(item.id, selected, setSelected)}
     />

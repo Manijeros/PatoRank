@@ -8,8 +8,8 @@ jobs:
     name: Install and publish
     runs-on: ubuntu-latest
     env:
-      BASE_ID: ${{ secrets.BASE_ID }}
-      BASE_APIKEY: ${{ secrets.BASE_APIKEY }}
+      EXPO_PUBLIC_BASE_ID: ${{ secrets.BASE_ID }}
+      EXPO_PUBLIC_BASE_APIKEY: ${{ secrets.BASE_APIKEY }}
       CONFIGURED: true
     steps:
       - uses: actions/checkout@v1

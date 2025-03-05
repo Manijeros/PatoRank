@@ -1,16 +1,23 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { FloatingAction } from 'react-native-floating-action'
 import Rankings from '@src/Rankings'
-import PlayersAware, { PlayersAwareComponentProps } from '@src/PlayersAware'
-import { NavigationEvents } from 'react-navigation'
-import { NavigationStackScreenProps } from 'react-navigation-stack'
+import createPlayersAware, { PlayersAwareComponentProps } from '@src/PlayersAware'
+import { useFocusEffect } from '@react-navigation/native'
+import { StackScreenProps } from '@react-navigation/stack'
+import { PatoRoutesParams } from '@src/types/routes'
+import { rebuildRanking } from '@src/ranking'
 
 const actions = [
   {
     text: 'Match',
     name: 'bt_match',
     color: '#14B795'
+  },
+  {
+    text: 'Rebuild ranking',
+    name: 'bt_rebuild',
+    color: '#804040'
   }
 ]
 
@@ -18,10 +25,12 @@ function Home({
   players,
   setShouldUpdate,
   navigation
-}: PlayersAwareComponentProps & NavigationStackScreenProps) {
+}: PlayersAwareComponentProps & StackScreenProps<PatoRoutesParams, "Rankings">) {
+  useFocusEffect(useCallback(() => {
+    setShouldUpdate?.(true)
+  }, [setShouldUpdate]))
   return (
     <View style={styles.container}>
-      <NavigationEvents onWillFocus={() => setShouldUpdate!(true)} />
       <Rankings players={players} setShouldUpdate={setShouldUpdate} />
       {players && (
         <FloatingAction
@@ -32,6 +41,9 @@ function Home({
             switch (name) {
               case 'bt_match':
                 navigation.push('SelectPlayers', { players })
+                break
+              case 'bt_rebuild':
+                rebuildRanking().then(()=>setShouldUpdate?.(true))
                 break
             }
           }}
@@ -54,4 +66,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default PlayersAware(Home)
+export default createPlayersAware(Home)

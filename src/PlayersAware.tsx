@@ -7,10 +7,10 @@ export interface PlayersAwareComponentProps {
   setShouldUpdate?: (value: boolean) => void
 }
 
-export default function PlayersAware<T>(
+export default function createPlayersAware<T>(
   Component: React.FC<T & PlayersAwareComponentProps>
 ) {
-  return (props: T) => {
+  return function PlawerAware(props: T) {
     const [shouldUpdate, setShouldUpdate] = useState(true)
     const [players, setPlayers] = useState(
       undefined as PlayerData[] | undefined

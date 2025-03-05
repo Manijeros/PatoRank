@@ -64,7 +64,7 @@ function SelectPosition({
               key={n}
               onPress={enabled ? () => onTap(player, n) : undefined}
               underlayColor="#AA5500"
-              style={badgeStyle(n, selected, n == maxPosition)}
+              style={badgeStyle(n, selected, n === maxPosition)}
             >
               <Text style={badgeTextStyle(n, selected)}>
                 {positionIcons[n - 1] + ' ' + n}

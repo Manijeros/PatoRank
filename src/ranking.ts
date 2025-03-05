@@ -32,7 +32,7 @@ export async function getPlayersRankings(): Promise<{
  * Returns a list of up to 100 players, with their id/name, rating, rating deviation,
  * and volatility
  */
-export async function getPlayers(): Promise<Array<PlayerData>> {
+export async function getPlayers(): Promise<PlayerData[]> {
   return db.getPlayers()
 }
 
@@ -54,24 +54,39 @@ export async function addMatch(match: NewMatch) {
 }
 
 export async function updateRankingWithMatch(match: NewMatch) {
-  const { ranking, players } = await buildRanking()
+  updateRankingWithMatches([match], false)
+}
+export async function rebuildRanking() {
+  const matches = await db.getMatches()
+  await updateRankingWithMatches(matches.map(match => ({
+    first: match.first[0],
+    second: match.second,
+    third: match.third ?? [],
+    fourth: match.fourth ?? []
+  })), true)
+}
 
-  const race = ranking.makeRace([
-    [players[match.first].glicko],
-    match.second.filter(Boolean).map(playerId => players[playerId].glicko),
-    match.third.filter(Boolean).map(playerId => players[playerId].glicko),
-    match.fourth.filter(Boolean).map(playerId => players[playerId].glicko)
-  ])
+async function updateRankingWithMatches(matches: NewMatch[], reset: boolean) {
+  const { ranking, players } = await buildRanking(reset)
 
-  ranking.updateRatings(race)
+  for (const match of matches) {
+    const race = ranking.makeRace([
+      [players[match.first].glicko],
+      match.second.filter(Boolean).map(playerId => players[playerId].glicko),
+      match.third.filter(Boolean).map(playerId => players[playerId].glicko),
+      match.fourth.filter(Boolean).map(playerId => players[playerId].glicko)
+    ])
 
-  const updatedPlayers = [match.first]
+    ranking.updateRatings(race)
+  }
+
+  const updatedPlayers = new Set(matches.flatMap( match => [match.first]
     .concat(match.second.filter(Boolean))
     .concat(match.third.filter(Boolean))
-    .concat(match.fourth.filter(Boolean))
+    .concat(match.fourth.filter(Boolean))))
 
   return db.updatePlayers(
-    updatedPlayers.map(playerId => ({
+    [...updatedPlayers].map(playerId => ({
       id: playerId,
       rating: players[playerId].glicko.getRating(),
       rd: players[playerId].glicko.getRd(),
@@ -80,7 +95,7 @@ export async function updateRankingWithMatch(match: NewMatch) {
   )
 }
 
-async function buildRanking(): Promise<{
+async function buildRanking(reset: boolean): Promise<{
   ranking: glicko.Glicko2
   players: { [key: string]: PlayerWithGlicko }
 }> {
@@ -98,7 +113,9 @@ async function buildRanking(): Promise<{
     playersData.map(player => ({
       [player.id]: {
         data: player,
-        glicko: ranking.makePlayer(player.rating, player.rd, player.vol)
+        glicko: reset ?
+          ranking.makePlayer(rankingSettings.rating, rankingSettings.rd, rankingSettings.vol) :
+          ranking.makePlayer(player.rating, player.rd, player.vol)
       }
     }))
   )

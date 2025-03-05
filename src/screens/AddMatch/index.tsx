@@ -10,10 +10,11 @@ import {
   addMatch
 } from '@src/ranking'
 import RoundedButton from '@src/RoundedButton'
-import { NavigationStackScreenProps } from 'react-navigation-stack'
+import { StackScreenProps } from '@react-navigation/stack'
 import SelectPosition, {
   Selection
 } from '@src/components/AddMatch/SelectPosition'
+import { PatoRoutesParams } from '@src/types/routes'
 
 interface MatchesMessageProps {
   count: number
@@ -76,7 +77,7 @@ interface AddMatchProps {
 function AddMatch({
   players,
   navigation
-}: AddMatchProps & NavigationStackScreenProps) {
+}: AddMatchProps & StackScreenProps<PatoRoutesParams, "AddMatch">) {
   const [selectedPositions, setSelectedPositions] = useState(
     {} as { [index: string]: number | undefined }
   )
@@ -212,7 +213,7 @@ async function send(selectedPositions: Selection) {
   await updateRankingWithMatch(match)
 }
 
-export default function AddMatchWrapped(props: NavigationStackScreenProps) {
-  const players = props.navigation.getParam('players')
+export default function AddMatchWrapped(props: StackScreenProps<PatoRoutesParams, "AddMatch">) {
+  const players = props.route.params.players
   return <AddMatch {...props} players={players} />
 }

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
-import { createAppContainer, createSwitchNavigator } from 'react-navigation'
-import { createStackNavigator } from 'react-navigation-stack'
+import { DarkTheme, NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
 import * as Font from 'expo-font'
 
 import Home from '@src/screens/Home'
@@ -9,36 +9,33 @@ import AddMatch from '@src/screens/AddMatch'
 import NotReady from '@src/screens/NotReady'
 
 import db from '@src/db'
+import { PatoRoutesParams } from './types/routes'
 
-const MainNavigator = createStackNavigator(
-  {
-    Rankings: { screen: Home },
-    SelectPlayers,
-    AddMatch
-  },
-  {
-    defaultNavigationOptions: {
-      headerStyle: {
-        backgroundColor: '#121212'
-      },
-      headerTintColor: '#14B795'
-    }
+const Stack = createStackNavigator<PatoRoutesParams>()
+
+function MainNavigator() {
+  return <Stack.Navigator initialRouteName="Rankings">
+    <Stack.Screen name="Rankings" component={Home} />
+    <Stack.Screen name="SelectPlayers" component={SelectPlayers} />
+    <Stack.Screen name="AddMatch" component={AddMatch} />
+  </Stack.Navigator>
+}
+
+const isConfigured = process.env.EXPO_PUBLIC_CONFIGURED !== undefined
+
+const theme: ReactNavigation.Theme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    background: '#121212',
+    text: '#14B795',
   }
-)
-
-const isConfigured = process.env.CONFIGURED !== undefined
-
-const RootNavigator = createSwitchNavigator(
-  {
-    NotReady,
-    MainNavigator
-  },
-  {
-    initialRouteName: isConfigured ? 'MainNavigator' : 'NotReady'
-  }
-)
-
-const Main = createAppContainer(RootNavigator)
+}
+function Main() {
+  return <NavigationContainer theme={theme}>
+    {isConfigured ? <MainNavigator /> : <NotReady />}
+  </NavigationContainer>
+}
 
 function App() {
   useEffect(() => {
@@ -50,9 +47,8 @@ function App() {
 
   return <Main />
 }
-
 if (isConfigured) {
-  db.setup(process.env.BASE_ID!, process.env.BASE_APIKEY!)
+  db.setup(process.env.EXPO_PUBLIC_BASE_ID!, process.env.EXPO_PUBLIC_BASE_APIKEY!)
 }
 
-export default App
+export default App;
