@@ -15,10 +15,10 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
-          node-version: 16.4
-      - uses: expo/expo-github-action@v5
+          node-version: 22.6
+      - uses: expo/expo-github-action@v8
         with:
-          expo-version: 6.0.6
+          expo-version: 6.3.10
           expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
           expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
       - run: yarn install
